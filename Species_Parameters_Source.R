@@ -1,3 +1,6 @@
+#####################################
+#This source code lists the community parameters of the two resident and two invader species.
+#####################################
 
 #--Resident Community Parameters-----
 env_condition <- seq(from=0,to=.25,by=.01)
