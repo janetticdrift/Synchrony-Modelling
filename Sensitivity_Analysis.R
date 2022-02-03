@@ -2,11 +2,12 @@
 #This script produces figures that show the range in variance ratios of resident communities,
 #and their subsequent synchrony dynamics after invasion of a strong and weak invader.
 #####################################
-
-setwd("~/Dropbox/Synchrony")
-
+library(here)
 library(codyn)
 set.seed(13)
+
+#Read in species parameters
+source(here("Species_Parameters_Source.R"))
 
 ###Figure 5: Effects of parameters on invader growth rate
 
