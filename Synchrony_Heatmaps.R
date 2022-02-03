@@ -13,7 +13,10 @@ library(ggplot2)
 library(reshape2)
 library(ggpubr)
 
-runs <- 2000 # number of runs
+# Package for setting paths
+library(here)
+
+runs <- 10 # number of runs
 
 #load species parameters
 source(here("Species_Parameters_Source.R"))
@@ -159,6 +162,12 @@ for (x in 1:length(env_condition)) {
         #calculate population size for species 2
         N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
                                (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+        
+        # Needed for if N1 or N2 are 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        N1[is.na(N1)] <- 0
+        N2[is.na(N2)] <- 0
+        
         if(N1[t+1] < 0) {
           N1[t+1] <- 0
         }
@@ -175,6 +184,10 @@ for (x in 1:length(env_condition)) {
         
         N3[counter] <- invader_abund_poor*exp(r3*(1-(invader_abund_poor/K3) - (beta31*N1[t]/K1) - (beta32*N2[t]/K2))
                                               + (sigmaE3*miuE[t]) + (sigmaD3*miuD3[counter])/sqrt(invader_abund_poor))
+        # Needed for when N4 is 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        N3[is.na(N3)] <- 0
+        
         if(N3[counter] < 0) {
           N3[counter] <- 0
         }
@@ -222,7 +235,7 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      #State the variables
+      #State variables
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
       N4 <- rep(NA, (time-burn_in))
@@ -253,6 +266,12 @@ for (x in 1:length(env_condition)) {
         #calculate population size for species 2
         N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
                                (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+        
+        # Needed for if N1 or N2 are 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        N1[is.na(N1)] <- 0
+        N2[is.na(N2)] <- 0
+
         if(N1[t+1] < 0) {
           N1[t+1] <- 0
         }
@@ -268,6 +287,11 @@ for (x in 1:length(env_condition)) {
       for (t in burn_in:(time-1)) {
         N4[counter] <- invader_abund_good*exp(r4*(1-(invader_abund_good/K4) - (beta41*N1[t]/K1) - (beta42*N2[t]/K2))
                                               + (sigmaE4*miuE[t])+(sigmaD4*miuD4[counter])/sqrt(invader_abund_good))
+        
+        # Needed for when N4 is 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        N4[is.na(N4)] <- 0
+        
         if(N4[counter] < 0) {
           N4[counter] <- 0
         }

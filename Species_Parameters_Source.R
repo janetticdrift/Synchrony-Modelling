@@ -21,7 +21,7 @@ r2 <- 0.8
 K1 <- 1000      
 K2 <- 1500      
 sigmaD1 <- 1    
-sigmaD2 <- 1    
+sigmaD2 <- 1  
 
 #--Weak Invader Parameters-----
 r3 <- 0.4
