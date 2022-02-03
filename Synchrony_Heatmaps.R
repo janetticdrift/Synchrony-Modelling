@@ -11,11 +11,12 @@ library(codyn)
 #Packages for creating plots
 library(ggplot2)
 library(reshape2)
+library(ggpubr)
 
 runs <- 2000 # number of runs
 
 #load species parameters
-source("Species_Parameters_Source.R")
+source(here("Species_Parameters_Source.R"))
 
 # ----------------------------------------------------------------------------------------
 ###Figure 1: Resident communities' starting variance ratios----
@@ -196,10 +197,10 @@ for (x in 1:length(env_condition)) {
 #Successful Invasion of Poor Invader Plot
 M2 <- melt(success_lambda_poor)
 
-ggplot(M2, aes(x=Var1, y=Var2, fill=value*100)) + 
+plot1 <- ggplot(M2, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
   scale_fill_distiller(palette = "RdBu", limits = c(min(success_lambda_poor)*100, 100)) +
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Success of Weak Invader", fill="Growth
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader", fill="Growth
 Success (%)") +
   theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
@@ -290,15 +291,22 @@ for (x in 1:length(env_condition)) {
 #Successful Invasion of Good Invader Plot
 M3 <- melt(success_lambda_good)
 
-ggplot(M3, aes(x=Var1, y=Var2, fill=value*100)) +
+plot2 <- ggplot(M3, aes(x=Var1, y=Var2, fill=value*100)) +
   geom_tile() + 
   scale_fill_distiller(palette = "RdBu", limits = c(min(success_lambda_good)*100, 100)) +
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Success of Strong Invader", fill="Growth
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader", fill="Growth
 Success (%)") +
   theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
+#Combine plots together, label A and B
+quartz(width=11, height=5)
+
+ggarrange(
+  plot1, plot2, labels = c("A", "B"),
+  common.legend = TRUE, legend = "right"
+)
 # ----------------------------------------------------------------------------------------
 ###Figure 3: Resilience of resident communities to established invaders
 
