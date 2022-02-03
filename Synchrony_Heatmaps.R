@@ -1,14 +1,21 @@
 #####################################
-#This script produces figures that show the range in variance ratios of resident communities,
-#and their subsequent synchrony dynamics after invasion of a strong and weak invader.
+# This script produces figures that show the range in 
+# variance ratios of resident communities,
+# and their subsequent synchrony dynamics after invasion 
+# of a strong and weak invader.
 #####################################
 
-setwd("~/Dropbox/Synchrony/Modeling Code")
+# Package for calculating the variance ratio
 library(codyn)
-runs <- 2000
+
+#Packages for creating plots
+library(ggplot2)
+library(reshape2)
+
+runs <- 10 # number of runs
 
 #load species parameters
-source("Final Code/Species_Parameters_Source.R")
+source("Species_Parameters_Source.R")
 
 # ----------------------------------------------------------------------------------------
 ###Figure 1: Resident communities' starting variance ratios----
@@ -28,7 +35,7 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      #State the variables
+      #Set state variables
       time <- 500 
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
@@ -48,23 +55,21 @@ for (x in 1:length(env_condition)) {
       #Create the model
       for (t in 1:(time-1)) {
         #calculate population sizes for species 1
-        N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2))+
-                               (sigmaE1*miuE[t])+(sigmaD1*miuD1[t])/sqrt(N1[t]))
-        
+        N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2)) +
+                               (sigmaE1*miuE[t]) + (sigmaD1*miuD1[t])/sqrt(N1[t]))
+        if(N1[t+1] < 0) {
+          N1[t+1] <- 0
+        }
         #calculate population sizes for species 2
-        N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1))+
-                               (sigmaE2*miuE[t])+(sigmaD2*miuD2[t])/sqrt(N2[t]))
-      }
-      counter <- 1 
-      if(N1[counter] < 0) {
-        N1[counter] <- 0
-      }
-      if(N2[counter] < 0) {
-        N2[counter] <- 0
-      }
+        N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
+                               (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+        if(N2[t+1] < 0) {
+          N2[t+1] <- 0
+        }
+     
+        }
       
-      #Create graph showing biomass through time for each species 
-      #and then species through time
+      #Calculate total biomass through time in the community
       total_biomass <- N1 + N2
       
       #Current coefficient of variation
@@ -82,16 +87,16 @@ for (x in 1:length(env_condition)) {
                                 abundance.var = "abundance", bootnumber = 1)
       VR_current[z] <- VR_temp$VR
     }
+    
     VR[x,y] <- mean(VR_current)
     cv_total_biomass[x,y] <- mean(CV_current)
   }
+  
   print(x/length(env_condition))
+  
 }
 
-#Packages for creating plots
-library(ggplot2)
-library(reshape2)
-
+# Create heat map
 M1 <- melt(VR) 
 
 ggplot(M1, aes(x=Var1, y=Var2, fill=value)) + 
@@ -107,11 +112,9 @@ ggplot(M1, aes(x=Var1, y=Var2, fill=value)) +
 
 #Figure 2.a: Weak Invader-----
 #Set outputs of interest
-cv_total_biomass <-matrix(NA,nrow=length(env_condition), ncol = length(beta_range))
 avg_lambda_poor <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 success_lambda_poor <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 burn_in <- 100
-time <- 500
 
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
@@ -145,32 +148,32 @@ for (x in 1:length(env_condition)) {
       miuD2 <- rnorm(time, mean = 0, sd = 1) #dem timeseries for species 2
       miuD3 <- rnorm((time-burn_in), mean = 0, sd = 1)
       
-      
       #Create the model for resident community
       for (t in 1:(time-1)) {
         
-        if(N1[t] < 0) {
-          N1[t] <- 0
-        }
-        if(N2[t] < 0) {
-          N2[t] <- 0
-        }
-        
         #calculate population size for species 1
-        N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2))+
-                               (sigmaE1*miuE[t])+(sigmaD1*miuD1[t])/sqrt(N1[t]))
+        N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2)) +
+                               (sigmaE1*miuE[t]) + (sigmaD1*miuD1[t])/sqrt(N1[t]))
         
         #calculate population size for species 2
-        N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1))+
-                               (sigmaE2*miuE[t])+(sigmaD2*miuD2[t])/sqrt(N2[t]))
+        N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
+                               (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+        if(N1[t+1] < 0) {
+          N1[t+1] <- 0
+        }
+        if(N2[t+1] < 0) {
+          N2[t+1] <- 0
+        }
+        
       }
+      
       counter <- 1
       
       #Model effects of poor invasion
       for (t in burn_in:(time-1)) {
         
         N3[counter] <- invader_abund_poor*exp(r3*(1-(invader_abund_poor/K3) - (beta31*N1[t]/K1) - (beta32*N2[t]/K2))
-                                              + (sigmaE3*miuE[t])+(sigmaD3*miuD3[counter])/sqrt(invader_abund_poor))
+                                              + (sigmaE3*miuE[t]) + (sigmaD3*miuD3[counter])/sqrt(invader_abund_poor))
         if(N3[counter] < 0) {
           N3[counter] <- 0
         }
@@ -204,11 +207,8 @@ Success (%)") +
 
 #Figure 2.b: Strong Invader-----
 #Set outputs of interest
-cv_total_biomass <-matrix(NA,nrow=length(env_condition), ncol = length(beta_range))
 avg_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
-burn_in <- 100
-time <- 500
 
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
@@ -245,31 +245,22 @@ for (x in 1:length(env_condition)) {
       
       #Create the model for resident community
       for (t in 1:(time-1)) {
-        
-        if(N1[t] < 0) {
-          N1[t] <- 0
-        }
-        if(N2[t] < 0) {
-          N2[t] <- 0
-        }
-        
         #calculate population size for species 1
-        if(N1[t] > 0) {
-          N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2))+
-                                 (sigmaE1*miuE[t])+(sigmaD1*miuD1[t])/sqrt(N1[t]))
-        } else {
-          N1[t+1] <- 0
-        }
+        N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2)) +
+                               (sigmaE1*miuE[t]) + (sigmaD1*miuD1[t])/sqrt(N1[t]))
         
         #calculate population size for species 2
-        if (N2[t] > 0) {
-          N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1))+
-                                 (sigmaE2*miuE[t])+(sigmaD2*miuD2[t])/sqrt(N2[t]))
-        } else {
+        N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
+                               (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+        if(N1[t+1] < 0) {
+          N1[t+1] <- 0
+        }
+        if(N2[t+1] < 0) {
           N2[t+1] <- 0
         }
         
       }
+
       counter <- 1
       
       #Model effects of strong invasion
@@ -285,8 +276,10 @@ for (x in 1:length(env_condition)) {
         
         counter <- counter + 1
       }
+      
       lambda_good_a[z] <- mean(lambda_good[,z])
     }
+    
     avg_lambda_good[x,y] <- mean(lambda_good_a)
     success_lambda_good[x,y] <- length(which(lambda_good>0))/((time-burn_in)*runs)
     
@@ -310,12 +303,13 @@ Success (%)") +
 ###Figure 3: Resilience of resident communities to established invaders
 
 #Figure 3.a: Weak Invader in 2 Species Community----
+time <- 300 
 burn_in <- 200
-timeseries <- 100
+timeseries <- 100 # length of timeseries to use for VR calculations
 invasion_success <- burn_in + 10
 
-VR_pre_poor_2 <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
-VR_post_poor_2 <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+VR_pre_poor <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+VR_post_poor <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
@@ -323,20 +317,18 @@ for (x in 1:length(env_condition)) {
     env <- env_condition[x]
     beta <- beta_range[y]
     
-    VR_current_pre_poor_2 <- rep(NA, runs)
-    VR_current_post_poor_2 <- rep(NA, runs)
+    VR_current_pre_poor <- rep(NA, runs)
+    VR_current_post_poor <- rep(NA, runs)
     
     for (z in 1:runs) {
       
       #State the variables
-      time <- 300 
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
       N3 <- rep(NA, time)
       
       N1[1] <- 50
       N2[1] <- 50
-      N3[1] <- 0
       
       #Set parameters
       beta12 <- beta   
@@ -357,24 +349,25 @@ for (x in 1:length(env_condition)) {
         
         #calculate population sizes for species 1
         N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2)) - (beta13*N3[t]/K3) +
-                               (sigmaE1*miuE[t])+(sigmaD1*miuD1[t])/sqrt(N1[t]))
+                               (sigmaE1*miuE[t]) + (sigmaD1*miuD1[t])/sqrt(N1[t]))
         
         #calculate population sizes for species 2
         N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) - (beta23*N3[t]/K3) +
-                               (sigmaE2*miuE[t])+(sigmaD2*miuD2[t])/sqrt(N2[t]))
+                               (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
         
         #calculate population sizes for species 3
         N3[t+1] <- N3[t]*exp(r3*(1-(N3[t]/K3) - (beta31*N1[t]/K1)) - (beta32*N2[t]/K2) +
                                (sigmaE3*miuE[t]) + (sigmaD3*miuD3[t])/sqrt(N3[t]))
         
+        # Needed for when N3 is 0. sqrt(0) yields NaN
         N1[is.na(N1)] <- 0
         N2[is.na(N2)] <- 0
         N3[is.na(N3)] <- 0
         
-        if(N1[t+1] < 1) {
+        if(N1[t+1] < 0) {
           N1[t+1] <- 0
         }
-        if(N2[t+1] < 1) {
+        if(N2[t+1] < 0) {
           N2[t+1] <- 0
         }
         if(N3[t+1] < 1) {
@@ -384,22 +377,22 @@ for (x in 1:length(env_condition)) {
       
       #calculate variance ratio, pre-invasion
       # create an empty matrix
-      our_data_pre_poor_2 <- matrix(NA, nrow = 2*(burn_in + timeseries), ncol = 3)
+      our_data_pre_poor <- matrix(NA, nrow = 2*(burn_in - timeseries), ncol = 3)
       # fill in the first column with our species ID
-      our_data_pre_poor_2[,1] <- rep(c(1, 2), (burn_in + timeseries))
+      our_data_pre_poor[,1] <- rep(c(1, 2), (burn_in - timeseries))
       # fill in the second column with the timepoint
-      our_data_pre_poor_2[,2] <- rep(seq(1:(burn_in + timeseries)), each = 2)
+      our_data_pre_poor[,2] <- rep(seq(1:(burn_in - timeseries)), each = 2)
       # fill in our third colum with the abundances from our simulation model
-      our_data_pre_poor_2[,3] <- as.vector(rbind(N1[(burn_in-timeseries):(burn_in-1)], 
+      our_data_pre_poor[,3] <- as.vector(rbind(N1[(burn_in-timeseries):(burn_in-1)], 
                                                N2[(burn_in-timeseries):(burn_in-1)]))
       
-      our_data_pre_poor_v2_2 <- data.frame(our_data_pre_poor_2)
-      colnames(our_data_pre_poor_v2_2) <- c("species", "time", "abundance")
+      df_our_data_pre_poor <- data.frame(our_data_pre_poor)
+      colnames(df_our_data_pre_poor) <- c("species", "time", "abundance")
       
       # calculate the variance ratio
-      VR_temp_pre_poor_2 <- variance_ratio(our_data_pre_poor_v2_2, time.var = "time", species.var = "species", 
+      VR_temp_pre_poor <- variance_ratio(df_our_data_pre_poor, time.var = "time", species.var = "species", 
                                          abundance.var = "abundance", bootnumber = 1)
-      VR_current_pre_poor_2[z] <- VR_temp_pre_poor_2$VR
+      VR_current_pre_poor[z] <- VR_temp_pre_poor$VR
       
       #calculate variance ratio, post-invasion
       # create an empty matrix

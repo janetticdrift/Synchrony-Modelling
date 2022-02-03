@@ -1,5 +1,6 @@
 #####################################
-#This source code lists the community parameters of the two resident and two invader species.
+# This source code lists the community parameters 
+# of the two resident and two invader species.
 #####################################
 
 #--Resident Community Parameters-----
@@ -14,7 +15,7 @@ K2 <- 1500
 sigmaD1 <- 1    
 sigmaD2 <- 1    
 
-#--Poor Invader Parameters-----
+#--Weak Invader Parameters-----
 r3 <- 0.4
 K3 <- 900
 beta31 <- 0.6  
@@ -24,7 +25,7 @@ beta23 <- 0.4
 sigmaE3 <- -0.06 
 sigmaD3 <- 0  
 
-#--Good Invader Prameters-----
+#--Strong Invader Parameters-----
 r4 <- 0.7    
 K4 <- 1000      
 beta41 <- 0.5  
