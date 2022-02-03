@@ -12,7 +12,7 @@ library(codyn)
 library(ggplot2)
 library(reshape2)
 
-runs <- 10 # number of runs
+runs <- 2000 # number of runs
 
 #load species parameters
 source("Species_Parameters_Source.R")
