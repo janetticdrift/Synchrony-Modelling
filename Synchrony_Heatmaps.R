@@ -16,7 +16,7 @@ library(ggpubr)
 # Package for setting paths
 library(here)
 
-runs <- 2000 # number of runs
+runs <- 300 # number of runs
 
 #load species parameters
 source(here("Species_Parameters_Source.R"))
@@ -120,7 +120,7 @@ ggplot(M1, aes(x=Var1, y=Var2, fill=value)) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
-###Figure 2: Resistance of resident communities to invader growth of a weak and strong invader
+###Figure 2: Resistance of resident communities to invader growth of a weak and strong invader----
 
 #Figure 2.a: Weak Invader-----
 #Set outputs of interest
@@ -327,8 +327,8 @@ for (x in 1:length(env_condition)) {
 #Successful Invasion of Poor Invader Plot
 
 # set plot limits
-min_lim <- min(c(success_lambda_good, success_lambda_poor))
-max_lim <- max(c(success_lambda_good, success_lambda_poor))
+min_lim <- min(success_lambda_good, success_lambda_poor)
+max_lim <- max(success_lambda_good, success_lambda_poor)
 
 M2 <- melt(success_lambda_poor)
 
@@ -360,10 +360,19 @@ ggarrange(
   plot1, plot2, labels = c("A", "B"),
   common.legend = TRUE, legend = "right"
 )
+#Make common axes titles
+# Figure.2 <- ggarrange(
+#   plot1, plot2, labels = c("A", "B"),
+#   common.legend = TRUE, legend = "right"
+# )
+# annotate_figure(Figure.2,
+#                 left = text_grob("Strengh of Competition", rot = 90),
+#                 bottom = text_grob("Strength of Environmnental Variability", size = 10)
+# )
 
 ###Figure 3: Resilience of resident communities to established invaders
 
-#Figure 3.a and c: Weak Invader in 2 Species Community----
+#Figure 3.a and c: Weak Invader in 2 and 3 Species Community----
 time <- 300 
 burn_in <- 200
 timeseries <- 100 # length of timeseries to use for VR calculations
@@ -547,16 +556,7 @@ mean(VR_pre_poor_full>1, na.rm = TRUE)
 mean(VR_post_poor>1, na.rm = TRUE)
 mean(VR_post_poor_full>1, na.rm = TRUE)
 
-M4 <- melt(VR_post_poor)
-
-ggplot(M4, aes(x=Var1, y=Var2, fill=value)) + 
-  geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Weak Invader VRs", fill="VR") +
-  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
-
-#Figure 3.b and d: Strong Invader in 2 Species Community----
+#Figure 3.b and d: Strong Invader in 2 and 3 Species Community----
 time <- 300 
 burn_in <- 200
 timeseries <- 100 # length of timeseries to use for VR calculations
@@ -740,6 +740,18 @@ mean(VR_pre_good_full>1, na.rm = TRUE)
 mean(VR_post_good>1, na.rm = TRUE)
 mean(VR_post_good_full>1, na.rm = TRUE)
 
+# Plotting Figure 3: Invaders in 2 and 3 Species Community----
+#A. 2 species community weak invader post-invasion heatmap
+M4 <- melt(VR_post_poor)
+
+ggplot(M4, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Weak Invader VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+
+#B. 2 species community strong invader post-invasion heatmap
 M5 <- melt(VR_post_good)
 
 ggplot(M5, aes(x=Var1, y=Var2, fill=value)) + 
@@ -750,8 +762,7 @@ ggplot(M5, aes(x=Var1, y=Var2, fill=value)) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
-# Plotting Figure 3c d: Strong Invader in 3 Species Community----
-# 3 species community post-invasion heatmap
+#C. 3 species community weak invader post-invasion heatmap
 M6 <- melt(VR_post_poor_full) 
 
 ggplot(M6, aes(x=Var1, y=Var2, fill=value)) + 
@@ -761,6 +772,7 @@ ggplot(M6, aes(x=Var1, y=Var2, fill=value)) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
+#D. 3 species community strong invader post-invasion heatmap
 M7 <- melt(VR_post_good_full)
 
 ggplot(M7, aes(x=Var1, y=Var2, fill=value)) + 
