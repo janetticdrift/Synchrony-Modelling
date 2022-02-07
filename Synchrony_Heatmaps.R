@@ -783,6 +783,13 @@ ggplot(M7, aes(x=Var1, y=Var2, fill=value)) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
+#Combine plots into one figure - TBD
+# quartz(width=11, height=5)
+# 
+# ggarrange(
+#   plot4, plot5, plot6, plot7, labels = c("A", "B", "C", "D"),
+#   common.legend = TRUE, legend = "right", nrow = 2, ncol = 2
+# )
 ###Figure 4: Comparing the difference between pre- and post-invasion variance ratios
 
 #Figure 4.a: Weak Invader in 2 Species Community----
@@ -791,7 +798,7 @@ M8 <- melt(VR_post_poor - VR_pre_poor)
 ggplot(M8, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Weak Invader", fill="VR") +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
@@ -801,7 +808,7 @@ M9 <- melt(VR_post_good - VR_pre_good)
 ggplot(M9, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1.5)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Strong Invader", fill="VR") +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
@@ -811,7 +818,7 @@ M10 <- melt(VR_post_poor_full - VR_pre_poor_full)
 ggplot(M10, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Weak Invader", fill="VR") +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
@@ -821,7 +828,7 @@ M11 <- melt(VR_post_good_full - VR_pre_good_full)
 ggplot(M11, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1.25, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Strong Invader", fill="VR") +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
