@@ -16,7 +16,7 @@ library(ggpubr)
 # Package for setting paths
 library(here)
 
-runs <- 10 # number of runs
+runs <- 2000 # number of runs
 
 #load species parameters
 source(here("Species_Parameters_Source.R"))
@@ -140,7 +140,7 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      #State the variables
+      #State variables
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
       N3 <- rep(NA, (time-burn_in))
@@ -391,7 +391,7 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      #State the variables
+      #State variables
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
       N3 <- rep(NA, time)
@@ -584,7 +584,7 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      #State the variables
+      #State variables
       N1 <- rep(NA, time) 
       N2 <- rep(NA, time)
       N4 <- rep(NA, time)
@@ -788,7 +788,7 @@ M9 <- melt(VR_post_good - VR_pre_good)
 
 ggplot(M9, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
+  scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1.5)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Strong Invader", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
