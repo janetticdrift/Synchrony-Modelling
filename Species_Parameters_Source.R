@@ -20,8 +20,8 @@ r1 <- 0.5
 r2 <- 0.8
 K1 <- 1000      
 K2 <- 1500      
-sigmaD1 <- 1    
-sigmaD2 <- 1  
+sigmaD1 <- .1    
+sigmaD2 <- .1  
 
 #--Weak Invader Parameters-----
 r3 <- 0.4
@@ -31,7 +31,7 @@ beta32 <- 0.6
 beta13 <- 0.4  
 beta23 <- 0.4  
 sigmaE3 <- -0.06 
-sigmaD3 <- 1  
+sigmaD3 <- .1  
 
 #--Strong Invader Parameters-----
 r4 <- 0.7    
@@ -41,7 +41,7 @@ beta42 <- 0.5
 beta14 <- 0.5  
 beta24 <- 0.5 
 sigmaE4 <- -0.1
-sigmaD4 <- 1    
+sigmaD4 <- .1    
 
 
 
