@@ -16,7 +16,7 @@ library(ggpubr)
 # Package for setting paths
 library(here)
 
-runs <- 300 # number of runs
+runs <- 2000 # number of runs
 
 #load species parameters
 source(here("Species_Parameters_Source.R"))
@@ -373,6 +373,7 @@ ggarrange(
 ###Figure 3: Resilience of resident communities to established invaders
 
 #Figure 3.a and c: Weak Invader in 2 and 3 Species Community----
+
 time <- 300 
 burn_in <- 200
 timeseries <- 100 # length of timeseries to use for VR calculations
@@ -744,7 +745,7 @@ mean(VR_post_good_full>1, na.rm = TRUE)
 #A. 2 species community weak invader post-invasion heatmap
 M4 <- melt(VR_post_poor)
 
-ggplot(M4, aes(x=Var1, y=Var2, fill=value)) + 
+plot4 <- ggplot(M4, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Weak Invader VRs", fill="VR") +
@@ -754,7 +755,7 @@ ggplot(M4, aes(x=Var1, y=Var2, fill=value)) +
 #B. 2 species community strong invader post-invasion heatmap
 M5 <- melt(VR_post_good)
 
-ggplot(M5, aes(x=Var1, y=Var2, fill=value)) + 
+plot5 <- ggplot(M5, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Strong Invader VRs", fill="VR") +
@@ -765,7 +766,7 @@ ggplot(M5, aes(x=Var1, y=Var2, fill=value)) +
 #C. 3 species community weak invader post-invasion heatmap
 M6 <- melt(VR_post_poor_full) 
 
-ggplot(M6, aes(x=Var1, y=Var2, fill=value)) + 
+plot6 <- ggplot(M6, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Three-Species with Weak Invader VRs", fill="VR") +
@@ -775,7 +776,7 @@ ggplot(M6, aes(x=Var1, y=Var2, fill=value)) +
 #D. 3 species community strong invader post-invasion heatmap
 M7 <- melt(VR_post_good_full)
 
-ggplot(M7, aes(x=Var1, y=Var2, fill=value)) + 
+plot7 <- ggplot(M7, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Three-Species with Strong Invader VRs", fill="VR") +
@@ -784,18 +785,18 @@ ggplot(M7, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
 #Combine plots into one figure - TBD
-# quartz(width=11, height=5)
-# 
-# ggarrange(
-#   plot4, plot5, plot6, plot7, labels = c("A", "B", "C", "D"),
-#   common.legend = TRUE, legend = "right", nrow = 2, ncol = 2
-# )
+quartz(width=11, height=5)
+
+ggarrange(
+  plot4, plot5, plot6, plot7, labels = c("A", "B", "C", "D"),
+  common.legend = TRUE, legend = "right", nrow = 2, ncol = 2
+)
 ###Figure 4: Comparing the difference between pre- and post-invasion variance ratios
 
 #Figure 4.a: Weak Invader in 2 Species Community----
 M8 <- melt(VR_post_poor - VR_pre_poor)
 
-ggplot(M8, aes(x=Var1, y=Var2, fill=value)) + 
+plot8 <- ggplot(M8, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
@@ -805,7 +806,7 @@ ggplot(M8, aes(x=Var1, y=Var2, fill=value)) +
 #Figure 4.b: Strong Invader in 2 Species Community----
 M9 <- melt(VR_post_good - VR_pre_good)
 
-ggplot(M9, aes(x=Var1, y=Var2, fill=value)) + 
+plot9 <- ggplot(M9, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1.5)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
@@ -815,7 +816,7 @@ ggplot(M9, aes(x=Var1, y=Var2, fill=value)) +
 #Figure 4.c: Weak Invader in 3 Species Community----
 M10 <- melt(VR_post_poor_full - VR_pre_poor_full)
 
-ggplot(M10, aes(x=Var1, y=Var2, fill=value)) + 
+plot10 <- ggplot(M10, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
@@ -825,11 +826,16 @@ ggplot(M10, aes(x=Var1, y=Var2, fill=value)) +
 #Figure 4.d: Strong Invader in 3 Species Community----
 M11 <- melt(VR_post_good_full - VR_pre_good_full)
 
-ggplot(M11, aes(x=Var1, y=Var2, fill=value)) + 
+plot11 <- ggplot(M11, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1.25, 1)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
 
+quartz(width=11, height=5)
 
+ggarrange(
+  plot8, plot9, plot10, plot11, labels = c("A", "B", "C", "D"),
+  common.legend = TRUE, legend = "right", nrow = 2, ncol = 2
+)
