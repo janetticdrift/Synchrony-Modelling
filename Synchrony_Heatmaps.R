@@ -346,6 +346,7 @@ M3 <- melt(success_lambda_good)
 
 plot2 <- ggplot(M3, aes(x=Var1, y=Var2, fill=value*100)) +
   geom_tile() + 
+  geom_contour(aes(z=value*100), stat="contour") +
   scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader", fill="Growth
 Success (%)") +
