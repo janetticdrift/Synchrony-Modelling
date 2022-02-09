@@ -20,6 +20,8 @@ k_invader_min <- 500
 k_invader_max <- 2000
 sigma_e_min <- 0
 sigma_e_max <- 0.25
+sigma_d_min <- 0
+sigma_d_max <- 1
 
 runs <- 2000
 
@@ -31,16 +33,20 @@ r_invader_final <- rep(NA, runs)
 k_invader_final <- rep(NA, runs)
 sigma_residents_final <- rep(NA, runs)
 sigma_invader_final <- rep(NA, runs)
+sigmad_residents_final <- rep(NA, runs)
+sigmad_invader_final <- rep(NA, runs)
 
 burn_in <- 100
 time <- 500
 
-#Good Invader#------
+#Invader#------
     
 for (z in 1:runs) {
   env <- runif(1, sigma_e_min, sigma_e_max)
   beta <- runif(1, beta_min, beta_max)
-  sigmaE4 <- runif(1, sigma_e_min, sigma_e_max)
+  sigmaE3 <- runif(1, sigma_e_min, sigma_e_max)
+  sigmaD12 <- runif(1, sigma_d_min, sigma_d_max)
+  sigmaD3 <- runif(1, sigma_d_min, sigma_d_max)
   beta_invader <- runif(1, beta_min, beta_max)
   r_invader <- runif(1, r_invader_min, r_invader_max)
   k_invader <-runif(1, k_invader_min, k_invader_max)
@@ -49,13 +55,13 @@ for (z in 1:runs) {
   #State the variables
   N1 <- rep(NA, time) 
   N2 <- rep(NA, time)
-  N4 <- rep(NA, (time-burn_in))
+  N3 <- rep(NA, (time-burn_in))
   
   N1[1] <- 50 
   N2[1] <- 50
-  N4[1] <- 1 
+  N3[1] <- 1 
   
-  invader_abund_good <- 1
+  invader_abund <- 1
   
   #Set parameters, resident parameters remained constant with Species_Parameters_Source, 
   #while invader parameters were allowed to vary
@@ -66,18 +72,17 @@ for (z in 1:runs) {
   beta12 <- beta   
   beta21 <- beta  
   sigmaE1 <- -env 
-  sigmaE2 <- -env 
-  sigmaD1 <- 1
-  sigmaD2 <- 1
-  r4 <- r_invader       #intrinsic rate of growth of species 4
-  K4 <- k_invader     #carrying capacity for species 4
-  beta41 <- beta_invader   #effect of species 1 (resident) on species 4
-  beta42 <- beta_invader   #effect of species 2 on species 4
-  sigmaD4 <- 0    #demographic effect on species 4
+  sigmaE2 <- -env
+  r3 <- r_invader       #intrinsic rate of growth of species 4
+  K3 <- k_invader     #carrying capacity for species 4
+  beta31 <- beta_invader   #effect of species 1 (resident) on species 4
+  beta32 <- beta_invader   #effect of species 2 on species 4
+  sigmaD1 <- sigmaD12
+  sigmaD2 <- sigmaD12
   miuE <- rnorm(time, mean = 0, sd = 1) #environmental timeseries variation
   miuD1 <- rnorm(time, mean = 0, sd = 1) #dem timeseries for species 1
   miuD2 <- rnorm(time, mean = 0, sd = 1) #dem timeseries for species 2
-  miuD4 <- rnorm((time-burn_in), mean = 0, sd = 1)
+  miuD3 <- rnorm((time-burn_in), mean = 0, sd = 1)
   
   
   #Create the model for resident community
@@ -109,17 +114,17 @@ for (z in 1:runs) {
   }
   counter <- 1
   
-  #Model effects of good invasion
+  #Model effects of invasion
   for (t in burn_in:(time-1)) {
-    N4[counter] <- invader_abund_good*exp(r4*(1-(invader_abund_good/K4) - (beta41*N1[t]/K1) - (beta42*N2[t]/K2))
-                                          + (sigmaE4*miuE[t])+(sigmaD4*miuD4[counter])/sqrt(invader_abund_good))
-    if(N4[counter] < 0) {
-      N4[counter] <- 0
+    N3[counter] <- invader_abund*exp(r3*(1-(invader_abund/K3) - (beta31*N1[t]/K1) - (beta32*N2[t]/K2))
+                                          + (sigmaE3*miuE[t])+(sigmaD3*miuD3[counter])/sqrt(invader_abund))
+    if(N3[counter] < 0) {
+      N3[counter] <- 0
     }
     
     counter <- counter + 1
   }
-  lambda_per_time <- log(N4/invader_abund_good)
+  lambda_per_time <- log(N3/invader_abund)
   lambda_invader[z] <-mean(lambda_per_time)
   
   beta_residents_final[z] <- beta
@@ -127,7 +132,10 @@ for (z in 1:runs) {
   r_invader_final[z] <- r_invader
   k_invader_final[z] <- k_invader
   sigma_residents_final[z] <- env
-  sigma_invader_final[z] <- sigmaE4
+  sigma_invader_final[z] <- sigmaE3
+  sigmad_residents_final[z] <- sigmaD12
+  sigmad_invader_final[z] <- sigmaD3
+  
 }
 
 #Analyze Results:
@@ -137,11 +145,13 @@ r_invader_final_std <- scale(r_invader_final)
 k_invader_final_std <- scale(k_invader_final)
 sigma_residents_final_std <- scale(sigma_residents_final)
 sigma_invader_final_std <- scale(sigma_invader_final)
+sigmad_residents_final_std <- scale(sigmad_residents_final)
+sigmad_invader_final_std <- scale(sigmad_invader_final)
 
 #Model
-param_effects <- lm(lambda_invader ~ beta_residents_final_std + beta_invader_final_std +
-                      r_invader_final_std + k_invader_final_std + sigma_residents_final_std +
-                      sigma_invader_final_std)
+param_effects <- lm(lambda_invader ~ beta_residents_final_std + sigma_residents_final_std + 
+                      sigmad_residents_final_std +beta_invader_final_std + r_invader_final_std + 
+                      k_invader_final_std +sigma_invader_final_std  + sigmad_invader_final_std)
 summary(param_effects)
 
 ##########
@@ -153,16 +163,18 @@ error.bar <- function(x, y, upper, lower=upper, length=0.1,...){
 par(mar=c(4.1,3.5,0.7,0.7), tcl=-0.4, mgp=c(1,0.5,0))
 
 barplot(param_effects$coefficients[-1], 
-        ylim=c(-0.21, 0.32), names.arg=c(expression(paste("Resident ", beta)),
-                                        expression(paste("Invader ", beta)), 
+        ylim=c(-0.21, 0.2), names.arg=c(expression(paste("Resident ", beta)),
+                                         expression(paste("Resident ", sigma[E])),
+                                         expression(paste("Resident ", sigma[D])),
+                                         expression(paste("Invader ", beta)), 
                                          "Invader R",  
-                                         "Invader K", 
-                                        expression(paste("Resident ", sigma[E])), 
-                                        expression(paste("Invader ", sigma[E]))), 
+                                         "Invader K",
+                                         expression(paste("Invader ", sigma[E])),
+                                         expression(paste("Invader ", sigma[D]))), 
         cex.names = .8, las=2, cex.axis = .8, beside=T,
         col=rep(c("grey50"),6))
 abline(h=0)
-error.bar(seq(from=.7,by=1.2,length.out = 6),param_effects$coefficients[-1],
+error.bar(seq(from=.7,by=1.2,length.out = 8),param_effects$coefficients[-1],
           summary(param_effects)$coefficients[-1,2],length=0.03)
 
 mtext("Effect size",2,line=2.2)
