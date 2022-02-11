@@ -26,7 +26,9 @@ sigma_d_max <- 1
 runs <- 2000
 
 #Set outputs of interest
-lambda_invader <- rep(NA, runs)
+lambda_invader <- rep(NA, runs)         #Growth rate of the invader
+
+#Record parameter set for each run
 beta_residents_final <- rep(NA, runs)
 beta_invader_final <- rep(NA, runs)
 r_invader_final <- rep(NA, runs)
@@ -37,9 +39,9 @@ sigmad_residents_final <- rep(NA, runs)
 sigmad_invader_final <- rep(NA, runs)
 
 burn_in <- 100
-time <- 500
+time <- 200
 
-#Invader#------
+#Run model#------
     
 for (z in 1:runs) {
   env <- runif(1, sigma_e_min, sigma_e_max)
@@ -52,7 +54,7 @@ for (z in 1:runs) {
   k_invader <-runif(1, k_invader_min, k_invader_max)
   
   
-  #State the variables
+  #Set starting conditions
   N1 <- rep(NA, time) 
   N2 <- rep(NA, time)
   N3 <- rep(NA, (time-burn_in))
@@ -79,45 +81,50 @@ for (z in 1:runs) {
   beta32 <- beta_invader   #effect of species 2 on species 4
   sigmaD1 <- sigmaD12
   sigmaD2 <- sigmaD12
+  
+  #create environmental and demographic timeseries
   miuE <- rnorm(time, mean = 0, sd = 1) #environmental timeseries variation
   miuD1 <- rnorm(time, mean = 0, sd = 1) #dem timeseries for species 1
   miuD2 <- rnorm(time, mean = 0, sd = 1) #dem timeseries for species 2
   miuD3 <- rnorm((time-burn_in), mean = 0, sd = 1)
   
-  
-  #Create the model for resident community
+  #Run the model for resident community
   for (t in 1:(time-1)) {
+    #calculate population sizes for species 1
+    N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2)) +
+                           (sigmaE1*miuE[t]) + (sigmaD1*miuD1[t])/sqrt(N1[t]))
     
-    if(N1[t] < 0) {
-      N1[t] <- 0
-    }
-    if(N2[t] < 0) {
-      N2[t] <- 0
-    }
-    
-    #calculate population size for species 1
-    if(N1[t] > 0) {
-      N1[t+1] <- N1[t]*exp(r1*(1-(N1[t]/K1) - (beta12*N2[t]/K2))+
-                             (sigmaE1*miuE[t])+(sigmaD1*miuD1[t])/sqrt(N1[t]))
-    } else {
+    if(is.nan(N1[t+1])) {
       N1[t+1] <- 0
     }
     
-    #calculate population size for species 2
-    if (N2[t] > 0) {
-      N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1))+
-                             (sigmaE2*miuE[t])+(sigmaD2*miuD2[t])/sqrt(N2[t]))
-    } else {
+    if(N1[t+1] < 1) {
+      N1[t+1] <- 0
+    }
+    #calculate population sizes for species 2
+    N2[t+1] <- N2[t]*exp(r2*(1-(N2[t]/K2) - (beta21*N1[t]/K1)) +
+                           (sigmaE2*miuE[t]) + (sigmaD2*miuD2[t])/sqrt(N2[t]))
+    
+    if(is.nan(N2[t+1])) {
+      N2[t+1] <- 0
+    }
+    
+    if(N2[t+1] < 1) {
       N2[t+1] <- 0
     }
     
   }
+  
   counter <- 1
   
   #Model effects of invasion
   for (t in burn_in:(time-1)) {
     N3[counter] <- invader_abund*exp(r3*(1-(invader_abund/K3) - (beta31*N1[t]/K1) - (beta32*N2[t]/K2))
-                                          + (sigmaE3*miuE[t])+(sigmaD3*miuD3[counter])/sqrt(invader_abund))
+                                          + (sigmaE3*miuE[t]) + (sigmaD3*miuD3[counter])/sqrt(invader_abund))
+    if(is.nan(N3[counter])) {
+      N3[counter] <- 0
+    }
+    
     if(N3[counter] < 0) {
       N3[counter] <- 0
     }
@@ -125,8 +132,9 @@ for (z in 1:runs) {
     counter <- counter + 1
   }
   lambda_per_time <- log(N3/invader_abund)
-  lambda_invader[z] <-mean(lambda_per_time)
+  lambda_invader[z] <-mean(lambda_per_time) #record results
   
+  # record parameters for that run
   beta_residents_final[z] <- beta
   beta_invader_final[z] <- beta_invader
   r_invader_final[z] <- r_invader
@@ -148,7 +156,7 @@ sigma_invader_final_std <- scale(sigma_invader_final)
 sigmad_residents_final_std <- scale(sigmad_residents_final)
 sigmad_invader_final_std <- scale(sigmad_invader_final)
 
-#Model
+#Model of effect sizes
 param_effects <- lm(lambda_invader ~ beta_residents_final_std + sigma_residents_final_std + 
                       sigmad_residents_final_std +beta_invader_final_std + r_invader_final_std + 
                       k_invader_final_std +sigma_invader_final_std  + sigmad_invader_final_std)
