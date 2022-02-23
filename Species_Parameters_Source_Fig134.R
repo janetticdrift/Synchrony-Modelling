@@ -1,6 +1,7 @@
 #####################################
 # This source code lists the community parameters 
-# of the two resident and two invader species.
+# of the two resident and two invader species for 
+# Figures 1, 3, and 4.
 #####################################
 
 #######Parameter Abbreviations#######
@@ -31,7 +32,7 @@ beta32 <- 0.6
 beta13 <- 0.4  
 beta23 <- 0.4  
 sigmaE3 <- -0.06 
-sigmaD3 <- 0 
+sigmaD3 <- 1
 
 #--Strong Invader Parameters-----
 r4 <- 0.7    
@@ -41,7 +42,7 @@ beta42 <- 0.5
 beta14 <- 0.5  
 beta24 <- 0.5 
 sigmaE4 <- -0.1
-sigmaD4 <- 0   
+sigmaD4 <- 1   
 
 
 
