@@ -7,7 +7,7 @@ library(codyn)
 set.seed(13)
 
 #Read in species parameters
-source(here("Species_Parameters_Source.R"))
+source(here("Species_Parameters_Source_Fig134.R"))
 
 ###Figure 5: Effects of parameters on invader growth rate
 
