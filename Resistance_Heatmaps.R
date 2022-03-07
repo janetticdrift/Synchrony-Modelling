@@ -100,8 +100,8 @@ for (x in 1:length(env_condition)) {
         # Needed for when N4 is 0 for including demographic stochasticity
         # as sqrt(0) yields NaN
         
-        if(is.nan(N3[t+1])) {
-          N3[t+1] <- 0
+        if(is.nan(N3[counter])) {
+          N3[counter] <- 0
         }
         if(N3[counter] < 1) {
           N3[counter] <- 0
@@ -199,8 +199,8 @@ for (x in 1:length(env_condition)) {
         # Needed for when N4 is 0 for including demographic stochasticity
         # as sqrt(0) yields NaN
         # Needed for when N4 is 0. sqrt(0) yields NaN
-        if(is.nan(N4[t+1])) {
-          N4[t+1] <- 0
+        if(is.nan(N4[counter])) {
+          N4[counter] <- 0
         }
         
         if(N4[counter] < 1) {

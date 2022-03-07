@@ -46,7 +46,7 @@ time <- 200
 for (z in 1:runs) {
   env <- runif(1, sigma_e_min, sigma_e_max)
   beta <- runif(1, beta_min, beta_max)
-  sigmaE3 <- runif(1, sigma_e_min, sigma_e_max)
+  sigmaE3_temp <- runif(1, sigma_e_min, sigma_e_max)
   sigmaD12 <- runif(1, sigma_d_min, sigma_d_max)
   sigmaD3 <- runif(1, sigma_d_min, sigma_d_max)
   beta_invader <- runif(1, beta_min, beta_max)
@@ -75,6 +75,7 @@ for (z in 1:runs) {
   beta21 <- beta  
   sigmaE1 <- -env 
   sigmaE2 <- -env
+  sigmaE3 <- -sigmaE3_temp
   r3 <- r_invader       #intrinsic rate of growth of species 4
   K3 <- k_invader     #carrying capacity for species 4
   beta31 <- beta_invader   #effect of species 1 (resident) on species 4
