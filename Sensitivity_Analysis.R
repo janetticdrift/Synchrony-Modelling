@@ -46,7 +46,7 @@ time <- 200
 for (z in 1:runs) {
   env <- runif(1, sigma_e_min, sigma_e_max)
   beta <- runif(1, beta_min, beta_max)
-  sigmaE3_temp <- runif(1, sigma_e_min, sigma_e_max)
+  sigmaE3_range <- runif(1, sigma_e_min, sigma_e_max)
   sigmaD12 <- runif(1, sigma_d_min, sigma_d_max)
   sigmaD3 <- runif(1, sigma_d_min, sigma_d_max)
   beta_invader <- runif(1, beta_min, beta_max)
@@ -75,7 +75,7 @@ for (z in 1:runs) {
   beta21 <- beta  
   sigmaE1 <- -env 
   sigmaE2 <- -env
-  sigmaE3 <- -sigmaE3_temp
+  sigmaE3 <- -sigmaE3_range
   r3 <- r_invader       #intrinsic rate of growth of species 4
   K3 <- k_invader     #carrying capacity for species 4
   beta31 <- beta_invader   #effect of species 1 (resident) on species 4
@@ -169,8 +169,10 @@ summary(param_effects)
 error.bar <- function(x, y, upper, lower=upper, length=0.1,...){
   arrows(x,y+upper, x, y-lower, angle=90, code=3, length=length, ...)
 }
+
 par(mar=c(4.1,3.5,0.7,0.7), tcl=-0.4, mgp=c(1,0.5,0))
 
+#Create sensitivity plot
 barplot(param_effects$coefficients[-1], 
         ylim=c(-0.21, 0.2), names.arg=c(expression(paste("Resident ", beta)),
                                          expression(paste("Resident ", sigma[E])),
@@ -183,6 +185,7 @@ barplot(param_effects$coefficients[-1],
         cex.names = .8, las=2, cex.axis = .8, beside=T,
         col=rep(c("grey50"),6))
 abline(h=0)
+abline(v=3.7, lty = "dashed")
 error.bar(seq(from=.7,by=1.2,length.out = 8),param_effects$coefficients[-1],
           summary(param_effects)$coefficients[-1,2],length=0.03)
 
