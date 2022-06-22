@@ -399,7 +399,13 @@ plot4 <- ggplot(M4, aes(x=Var1, y=Var2, fill=value)) +
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Weak Invader VRs", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #B. 2 species community strong invader post-invasion heatmap
 M5 <- melt(VR_post_good)
@@ -410,7 +416,13 @@ plot5 <- ggplot(M5, aes(x=Var1, y=Var2, fill=value)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Two-Species with Strong Invader VRs", fill="VR") +
   theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #C. 3 species community weak invader post-invasion heatmap
 M6 <- melt(VR_post_poor_full) 
@@ -420,7 +432,13 @@ plot6 <- ggplot(M6, aes(x=Var1, y=Var2, fill=value)) +
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) + 
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Three-Species with Weak Invader VRs", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #D. 3 species community strong invader post-invasion heatmap
 M7 <- melt(VR_post_good_full)
@@ -431,7 +449,13 @@ plot7 <- ggplot(M7, aes(x=Var1, y=Var2, fill=value)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Three-Species with Strong Invader VRs", fill="VR") +
   theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Combine plots into one figure - TBD
 quartz(width=10, height=5)
@@ -448,9 +472,15 @@ M8 <- melt(VR_post_poor - VR_pre_poor)
 plot8 <- ggplot(M8, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = expression(paste("Two Species ", Delta,"VRs with Weak Invader")), fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Figure 4.b: Strong Invader in 2 Species Community----
 M9 <- melt(VR_post_good - VR_pre_good)
@@ -458,9 +488,15 @@ M9 <- melt(VR_post_good - VR_pre_good)
 plot9 <- ggplot(M9, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1.5)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Two Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = expression(paste("Two Species ", Delta,"VRs with Strong Invader")), fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Figure 4.c: Weak Invader in 3 Species Community----
 M10 <- melt(VR_post_poor_full - VR_pre_poor_full)
@@ -468,9 +504,15 @@ M10 <- melt(VR_post_poor_full - VR_pre_poor_full)
 plot10 <- ggplot(M10, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Weak Invader", fill=expression(paste("",Delta,"VR"))) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = expression(paste("Three Species ", Delta,"VRs with Weak Invader")), fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Figure 4.d: Strong Invader in 3 Species Community----
 M11 <- melt(VR_post_good_full - VR_pre_good_full)
@@ -478,9 +520,15 @@ M11 <- melt(VR_post_good_full - VR_pre_good_full)
 plot11 <- ggplot(M11, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#509b4b", high ="#9669b0", mid = "#f7f7f7", midpoint = 0, limit = c(-1.25, 1)) + 
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Change in Three Species VRs with Strong Invader", fill=expression(paste("",Delta,"VR"))) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = expression(paste("Three Species ", Delta,"VRs with Strong Invader")), fill=expression(paste("",Delta,"VR"))) +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 quartz(width=11, height=5)
 

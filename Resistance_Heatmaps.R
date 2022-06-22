@@ -238,9 +238,14 @@ plot1 <- ggplot(M2, aes(x=Var1, y=Var2, fill=value*100)) +
   scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader", fill="Growth
 Success (%)") +
-  theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Successful Invasion of Good Invader Plot
 M3 <- melt(success_lambda_good)
@@ -251,9 +256,14 @@ plot2 <- ggplot(M3, aes(x=Var1, y=Var2, fill=value*100)) +
   scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader", fill="Growth
 Success (%)") +
-  theme(axis.text = element_text( size = 12)) + 
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 #Combine plots together, label A and B
 quartz(width=11, height=5)

@@ -42,7 +42,7 @@ beta42 <- 0.5
 beta14 <- 0.5  
 beta24 <- 0.5 
 sigmaE4 <- -0.1
-sigmaD4 <- 0   
+sigmaD4 <- 0  
 
 
 

@@ -162,7 +162,7 @@ param_effects <- lm(lambda_invader ~ beta_residents_final_std + sigma_residents_
                       sigmad_residents_final_std +beta_invader_final_std + r_invader_final_std + 
                       k_invader_final_std +sigma_invader_final_std  + sigmad_invader_final_std)
 summary(param_effects)
-
+sd(param_effects$coefficients[-1])
 ##########
 #Bar Plot#
 ##########
@@ -170,24 +170,25 @@ error.bar <- function(x, y, upper, lower=upper, length=0.1,...){
   arrows(x,y+upper, x, y-lower, angle=90, code=3, length=length, ...)
 }
 
-par(mar=c(4.1,3.5,0.7,0.7), tcl=-0.4, mgp=c(1,0.5,0))
+par(mar=c(7,3.7,0.7,0.7), tcl=-0.4, mgp=c(1,0.5,0))
 
 #Create sensitivity plot
 barplot(param_effects$coefficients[-1], 
-        ylim=c(-0.21, 0.2), names.arg=c(expression(paste("Resident ", beta)),
+        ylim=c(-0.21, 0.2), 
+        names.arg=c(expression(paste("Resident ", beta)),
                                          expression(paste("Resident ", sigma[E])),
                                          expression(paste("Resident ", sigma[D])),
-                                         expression(paste("Invader ", beta)), 
-                                         "Invader R",  
+                                         expression(paste("Invader ", beta)),
+                                         "Invader R",
                                          "Invader K",
                                          expression(paste("Invader ", sigma[E])),
-                                         expression(paste("Invader ", sigma[D]))), 
-        cex.names = .8, las=2, cex.axis = .8, beside=T,
+                                         expression(paste("Invader ", sigma[D]))),
+        cex.names = 1.2, las=2, cex.axis = 1.2, beside=T,
         col=rep(c("grey50"),6))
 abline(h=0)
 abline(v=3.7, lty = "dashed")
 error.bar(seq(from=.7,by=1.2,length.out = 8),param_effects$coefficients[-1],
           summary(param_effects)$coefficients[-1,2],length=0.03)
 
-mtext("Effect size",2,line=2.2)
+mtext("Effect size",2,line=2.2, cex = 1.7)
 

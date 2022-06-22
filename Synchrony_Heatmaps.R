@@ -116,4 +116,10 @@ ggplot(M1, aes(x=Var1, y=Var2, fill=value)) +
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), y= expression(paste("Strength of Competititon (", beta, ")")), title = "Resident Communities' Variance Ratios", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95"))
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=14), #change axis title size
+        axis.text=element_text(size=12), #change axid text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=12), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
