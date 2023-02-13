@@ -19,7 +19,7 @@ species <- 15
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
 time <- 300
-runs <- 20
+runs <- 50
 
 K <- round(runif(species, min=1000, max=1500))
 r <- round(runif(species, min=0.1, max=0.9), 1)
@@ -29,7 +29,7 @@ for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
     
     env <- env_condition[x]
-  #  beta <- beta_range[y]
+    beta <- beta_range[y]
     
     VR_current <- rep(NA, runs)
     
@@ -55,18 +55,19 @@ for (x in 1:length(env_condition)) {
       #Create demographic variation
       miuD <- rnorm(time, mean = 0, sd = 1)
       
-    for (t in 1:length(time)) { # for each species being the focal species
-      for (s in 1:length(species)) {
+    for (t in 1:time) { # for each species being the focal species
+      for (s in 1:species) {
         N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
                                  (sigmaE*miuE[t]) + (sigmaD*miuD[t])/sqrt(N[t,s]))
-      }
       
-        if(is.nan(N[t+1,s])) {
-          N[t+1,s] <- 0
-        }
+        # if(is.nan(N[t+1,s])) {
+        #   N[t+1,s] <- 0
+        # }
       }
+    }  
     }
   }
+  print(x/length(env_condition))
 }
 
 
