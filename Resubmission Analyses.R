@@ -55,7 +55,7 @@ for (x in 1:length(env_condition)) {
       #Create demographic variation
       miuD <- rnorm(time, mean = 0, sd = 1)
       
-    for (t in 1:time) { # for each species being the focal species
+    for (t in 1:(time-1)) { # for each species being the focal species
       for (s in 1:species) {
         N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
                                  (sigmaE*miuE[t]) + (sigmaD*miuD[t])/sqrt(N[t,s]))
