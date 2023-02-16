@@ -15,7 +15,6 @@
 #--Resident Community Parameters-----
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
-time <- 300
 
 r1 <- 0.5
 r2 <- 0.8
