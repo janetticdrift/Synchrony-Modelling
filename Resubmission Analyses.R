@@ -108,11 +108,6 @@ for (x in 1:length(env_condition)) {
   print(x/length(env_condition))
 }
 
-# N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-#                          (sigmaE*miuE[t]) + (sigmaD*miuD[t])/sqrt(N[t,s]))
-#With Extra numbers added
-# N[t,s]*exp(r[s]*(1-(N[t,s]/K[s]) - sum(beta_matrix[s,]*N[t,]/K[s])) +
-#              (sigmaE*miuE[t]) + (sigmaD*miuD[t])/sqrt(N[t,s]))
 
 # Create heat map
 M1 <- melt(VR) 
