@@ -267,29 +267,22 @@ ggplot(M1, aes(x=Var1, y=Var2, fill=value)) +
 
 ###Add Invader Resilience Code###----
 
+#Number of species in the community
+species <- 2
+a <- species
+
+#Species and Community Parameters
+env_condition <- seq(from=0, to=.25, by=.01)
+beta_range <- seq(from=0, to=.95, by=.05)
+time <- 110 
+burn_in <- 100
+runs <- 200
+
+sigmaD <- 1
+
 #Invader Growth Rate Empty Output
-avg_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
-success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
-
-#--Weak Invader Parameters
-r3 <- 0.4
-K3 <- 900
-beta31 <- 0.6  
-beta32 <- 0.6  
-beta13 <- 0.4  
-beta23 <- 0.4  
-sigmaE3 <- -0.06 
-sigmaD3 <- 0 
-
-#--Strong Invader Parameters
-r4 <- 0.7    
-K4 <- 1000      
-beta41 <- 0.5  
-beta42 <- 0.5  
-beta14 <- 0.5  
-beta24 <- 0.5 
-sigmaE4 <- -0.1
-sigmaD4 <- 0  
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
@@ -297,8 +290,8 @@ for (x in 1:length(env_condition)) {
     env <- env_condition[x]
     beta <- beta_range[y]
     
-    lambda_good_a <- rep(NA, runs) 
-    lambda_good <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
     
     for (z in 1:runs) {
       
@@ -310,22 +303,26 @@ for (x in 1:length(env_condition)) {
       r <- append(r, 0.7)
       
       #Set starting abundances
-      N <- matrix(nrow = time, ncol = species + 1)
-      colnames(N) <- c(1:species + 1)
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
       
       N[1,1:species] <- 50 
-      N[1:burn_in, species+1] <- 0
-      N[burn_in:time, species+1] <- 1
-      
-      invader_abund_strong <- 1 
+      N[1, species+1] <- 0
       
       #Create competition coefficients
-      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
-      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_vector <- rnorm(species*species, mean=beta_range, sd=0.5)
       beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
-      diag(beta_matrix) <- 1
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
       #Add invader competition coefficients
-      beta_matrix <-
+      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0, to=.5, by=.05), species+1) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+#        set_colnames(c(1:(species + 1))) 
+#        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
       
       #Create environmental effect
       sigmaE <- -env
@@ -334,11 +331,14 @@ for (x in 1:length(env_condition)) {
       miuE <- rnorm(time, mean = 0, sd = 1)
       
       #Create demographic variation
-      miuD <- rnorm(species*time, mean = 0, sd = 1)
-      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
       
       for (t in 1:(time-1)) { # for each species being the focal species
-        for (s in 1:species) {
+        for (s in 1:species+1) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
                                    (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
