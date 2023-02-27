@@ -268,13 +268,13 @@ ggplot(M1, aes(x=Var1, y=Var2, fill=value)) +
 ###Add Invader Resilience Code###----
 
 #Number of species in the community
-species <- 2
+species <- 10
 a <- species
 
 #Species and Community Parameters
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
-time <- 110 
+time <- 200 
 burn_in <- 100
 runs <- 200
 
@@ -310,13 +310,13 @@ for (x in 1:length(env_condition)) {
       N[1, species+1] <- 0
       
       #Create competition coefficients
-      beta_vector <- rnorm(species*species, mean=beta_range, sd=0.5)
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
       beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add invader competition coefficients
-      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0, to=.5, by=.05), species+1) #Effect of residents on invader
+      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
@@ -335,7 +335,7 @@ for (x in 1:length(env_condition)) {
       miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
       
       for (t in 1:(time-1)) { # for each species being the focal species
-        for (s in 1:species+1) {
+        for (s in 1:(species+1)) {
           if(t == burn_in) {
             N[t,species+1] <- 1
           }
@@ -359,12 +359,12 @@ for (x in 1:length(env_condition)) {
         slice(-(1:burn_in)) %>%
         select(-c(extinct)) %>%
         gather(key = "species", value = "abundance") %>%
-        mutate(time = rep(c(1:(time-burn_in)), times = (a-number_extinct)))
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
       
-      if (species-number_extinct > 1){
+      if ((species+1)-number_extinct > 1){
         VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
                                   abundance.var = "abundance", bootnumber = 1)
-        total_species[z] <- species-number_extinct
+        total_species[z] <- (species+1)-number_extinct
         VR_current[z] <- VR_temp$VR } else {
           VR_current[z] <- NA
           total_species[z] <- NA
@@ -384,7 +384,7 @@ M1 <- melt(VR)
 
 ggplot(M1, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,3)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
        title = "Resident Communities' Variance Ratios", fill="VR") +
