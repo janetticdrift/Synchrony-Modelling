@@ -395,9 +395,15 @@ ggarrange(plot2sp, plot2num, plot5sp, plot5num, plot10sp, plot10num,
           ncol = 2, nrow = 3)
 
 ###Add Invader Resistance Code###----
-#Growth Rate Empty Output
-avg_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
-success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+runs <- 200
+sigmaD <- 1 #Residents 
+sigmaDi <- 0 #Invaders
+
+#2 species Weak Invader
+species <- 2
+a <- species
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_weak <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
@@ -405,20 +411,24 @@ for (x in 1:length(env_condition)) {
     env <- env_condition[x]
     beta <- beta_range[y]
     
-    lambda_good_a <- rep(NA, runs) 
-    lambda_good <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
     
     for (z in 1:runs) {
       
-      K <- round(runif(species, min=1000, max=1500))
-      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Multi-species resident parameters
+      # K <- round(runif(species, min=1000, max=1500))
+      # r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      K <- c(1000, 1500) 
+      r <- c(0.5, 0.8)
       
       #Strong invader parameters
-      Ki <- 1000
-      ri <- 0.7
+      # Ki <- 1000
+      # ri <- 0.7
       #Weak invader parameters
-      # Ki <- 900
-      # ri <- 0.4
+      Ki <- 900
+      ri <- 0.4
       
       #Set starting resident abundances
       N <- matrix(nrow = time, ncol = species)
@@ -430,16 +440,22 @@ for (x in 1:length(env_condition)) {
       Ni <- rep(NA, (time-burn_in))
       
       Ni[1] <- 1 
-      invader_abund_good <- 1
+      invader_abund <- 1
       
       #Create competition coefficients for residents
-      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0) #Set sd = 0, species to 2
       beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
       beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
       diag(beta_matrix) <- 1
       
+      #Create competition coefficients for strong invader
+      # beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      beta_res_on_invader <- rep(.6, 2)
+      
       #Create environmental effect
       sigmaE <- -env
+      sigmaEi <- -0.06
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -468,50 +484,707 @@ for (x in 1:length(env_condition)) {
       #Model effects of good invasion
       for (t in burn_in:(time-1)) {
         
-        Ni[counter] <- invader_abund_good*exp(ri*(1-(invader_abund_good/Ki) - (beta31*N1[t]/K1) - (beta32*N2[t]/K2))
-                                              + (sigmaE3*miuE[t]) + (sigmaD3*miuD3[counter])/sqrt(invader_abund_good))
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                                    sum(beta_res_on_invader*N[t,]/K)) + 
+                                                (sigmaEi*miuE[t]) + 
+                                                (sigmaDi*miuDi[counter])/sqrt(invader_abund))
         # Needed for when N4 is 0 for including demographic stochasticity
         # as sqrt(0) yields NaN
         
-        if(is.nan(N3[counter])) {
-          N3[counter] <- 0
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
         }
-        if(N3[counter] < 1) {
-          N3[counter] <- 0
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
         }
         
         #Calculate invader's growth rate
-        lambda_good[counter, z] <- log(N3[counter]/invader_abund_good)
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
         
         counter <- counter + 1
       }
-      lambda_good_a[z] <- mean(lambda_good[,z])
+      lambda_a[z] <- mean(lambda[,z])
     }
     
-    avg_lambda_good[x,y] <- mean(lambda_good_a)
-    success_lambda_good[x,y] <- length(which(lambda_good>0))/((time-burn_in)*runs)
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_weak[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
+  }
+  print(x/length(env_condition))
+}
+
+#2 species Strong Invader
+#Growth Rate Parameters and Empty Output
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      #Multi-species resident parameters
+      # K <- round(runif(species, min=1000, max=1500))
+      # r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      K <- c(1000, 1500) 
+      r <- c(0.5, 0.8)
+      
+      #Strong invader parameters
+      Ki <- 1000
+      ri <- 0.7
+      #Weak invader parameters
+      # Ki <- 900
+      # ri <- 0.4
+      
+      #Set starting resident abundances
+      N <- matrix(nrow = time, ncol = species)
+      colnames(N) <- c(1:species)
+      
+      N[1,] <- 50 
+      
+      #Set invader vector
+      Ni <- rep(NA, (time-burn_in))
+      
+      Ni[1] <- 1 
+      invader_abund <- 1
+      
+      #Create competition coefficients for residents
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0) #Set sd = 0, species to 2
+      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      diag(beta_matrix) <- 1
+      
+      #Create competition coefficients for strong invader
+      beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      # beta_res_on_invader <- rep(.6, 2)
+        
+      #Create environmental effect
+      sigmaE <- -env
+      sigmaEi <- -0.1
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm(species*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuDi <- rnorm((time-burn_in), mean = 0, sd = 1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:species) {
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      counter <- 1
+      
+      #Model effects of good invasion
+      for (t in burn_in:(time-1)) {
+        
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                                    sum(beta_res_on_invader*N[t,]/K)) + 
+                                                (sigmaEi*miuE[t]) + 
+                                                (sigmaDi*miuDi[counter])/sqrt(invader_abund))
+        # Needed for when N4 is 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
+        }
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
+        }
+        
+        #Calculate invader's growth rate
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
+        
+        counter <- counter + 1
+      }
+      lambda_a[z] <- mean(lambda[,z])
+    }
+    
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_good[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
   }
   print(x/length(env_condition))
 }
 
 
-# Create heat map
-M1 <- melt(VR) 
+# Create heat maps for 2species communities
+M_2resisstrong <- melt(success_lambda_good) 
+M_2resisweak <- melt(success_lambda_weak)
 
-ggplot(M1, aes(x=Var1, y=Var2, fill=value)) + 
+min_lim <- min(success_lambda_good, success_lambda_weak)
+max_lim <- max(success_lambda_good, success_lambda_weak)
+
+plot2spstrong <- ggplot(M_2resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
-       y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Resident Communities' Variance Ratios", fill="VR") +
+  y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 2 Residents", fill="Growth
+Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=14), #change axis title size
-        axis.text=element_text(size=12), #change axis text size
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
+
+plot2spweak <- ggplot(M_2resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
+  geom_tile() + 
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+  y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 2 Residents", fill="Growth
+Success (%)") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
+
+ggarrange(plot2spweak, plot2spstrong, labels = c("A", "B"))
+
+#5 species Weak Invader
+species <- 5
+a <- species
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_weak <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      #Multi-species resident parameters
+      K <- round(runif(species, min=1000, max=1500))
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      # K <- c(1000, 1500) 
+      # r <- c(0.5, 0.8)
+      
+      #Strong invader parameters
+      # Ki <- 1000
+      # ri <- 0.7
+      #Weak invader parameters
+      Ki <- 900
+      ri <- 0.4
+      
+      #Set starting resident abundances
+      N <- matrix(nrow = time, ncol = species)
+      colnames(N) <- c(1:species)
+      
+      N[1,] <- 50 
+      
+      #Set invader vector
+      Ni <- rep(NA, (time-burn_in))
+      
+      Ni[1] <- 1 
+      invader_abund <- 1
+      
+      #Create competition coefficients for residents
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
+      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      diag(beta_matrix) <- 1
+      
+      #Create competition coefficients for strong invader
+      # beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      beta_res_on_invader <- rep(.6, 2)
+      
+      #Create environmental effect
+      sigmaE <- -env
+      sigmaEi <- -0.06
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm(species*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuDi <- rnorm((time-burn_in), mean = 0, sd = 1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:species) {
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      counter <- 1
+      
+      #Model effects of good invasion
+      for (t in burn_in:(time-1)) {
+        
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                               sum(beta_res_on_invader*N[t,]/K)) + 
+                                           (sigmaEi*miuE[t]) + 
+                                           (sigmaDi*miuDi[counter])/sqrt(invader_abund))
+        
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
+        }
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
+        }
+        
+        #Calculate invader's growth rate
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
+        
+        counter <- counter + 1
+      }
+      lambda_a[z] <- mean(lambda[,z])
+    }
+    
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_weak[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
+  }
+  print(x/length(env_condition))
+}
+
+#5 species Strong Invader
+#Growth Rate Parameters and Empty Output
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      #Multi-species resident parameters
+      K <- round(runif(species, min=1000, max=1500))
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      # K <- c(1000, 1500) 
+      # r <- c(0.5, 0.8)
+      
+      #Strong invader parameters
+      Ki <- 1000
+      ri <- 0.7
+      #Weak invader parameters
+      # Ki <- 900
+      # ri <- 0.4
+      
+      #Set starting resident abundances
+      N <- matrix(nrow = time, ncol = species)
+      colnames(N) <- c(1:species)
+      
+      N[1,] <- 50 
+      
+      #Set invader vector
+      Ni <- rep(NA, (time-burn_in))
+      
+      Ni[1] <- 1 
+      invader_abund <- 1
+      
+      #Create competition coefficients for residents
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
+      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      diag(beta_matrix) <- 1
+      
+      #Create competition coefficients for strong invader
+      beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      # beta_res_on_invader <- rep(.6, 2)
+      
+      #Create environmental effect
+      sigmaE <- -env
+      sigmaEi <- -0.1
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm(species*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuDi <- rnorm((time-burn_in), mean = 0, sd = 1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:species) {
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      counter <- 1
+      
+      #Model effects of good invasion
+      for (t in burn_in:(time-1)) {
+        
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                               sum(beta_res_on_invader*N[t,]/K)) + 
+                                           (sigmaEi*miuE[t]) + 
+                                           (sigmaDi*miuDi[counter])/sqrt(invader_abund))
+        # Needed for when N4 is 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
+        }
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
+        }
+        
+        #Calculate invader's growth rate
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
+        
+        counter <- counter + 1
+      }
+      lambda_a[z] <- mean(lambda[,z])
+    }
+    
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_good[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
+  }
+  print(x/length(env_condition))
+}
+
+
+# Create heat maps for 2species communities
+M_5resisstrong <- melt(success_lambda_good) 
+M_5resisweak <- melt(success_lambda_weak)
+
+min_lim <- min(success_lambda_good, success_lambda_weak)
+max_lim <- max(success_lambda_good, success_lambda_weak)
+
+plot5spstrong <- ggplot(M_5resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
+  geom_tile() + 
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 5 Residents", fill="Growth
+Success (%)") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
         plot.title = element_text(size=18), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=12), #change legend title font size
-        legend.text = element_text(size=10)) #change legend text font size)
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
+
+plot5spweak <- ggplot(M_5resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
+  geom_tile() + 
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 5 Residents", fill="Growth
+Success (%)") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
+
+#10 species Weak Invader
+species <- 10
+a <- species
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_weak <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      #Multi-species resident parameters
+      K <- round(runif(species, min=1000, max=1500))
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      # K <- c(1000, 1500) 
+      # r <- c(0.5, 0.8)
+      
+      #Strong invader parameters
+      # Ki <- 1000
+      # ri <- 0.7
+      #Weak invader parameters
+      Ki <- 900
+      ri <- 0.4
+      
+      #Set starting resident abundances
+      N <- matrix(nrow = time, ncol = species)
+      colnames(N) <- c(1:species)
+      
+      N[1,] <- 50 
+      
+      #Set invader vector
+      Ni <- rep(NA, (time-burn_in))
+      
+      Ni[1] <- 1 
+      invader_abund <- 1
+      
+      #Create competition coefficients for residents
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
+      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      diag(beta_matrix) <- 1
+      
+      #Create competition coefficients for strong invader
+      # beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      beta_res_on_invader <- rep(.6, 2)
+      
+      #Create environmental effect
+      sigmaE <- -env
+      sigmaEi <- -0.06
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm(species*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuDi <- rnorm((time-burn_in), mean = 0, sd = 1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:species) {
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      counter <- 1
+      
+      #Model effects of good invasion
+      for (t in burn_in:(time-1)) {
+        
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                               sum(beta_res_on_invader*N[t,]/K)) + 
+                                           (sigmaEi*miuE[t]) + 
+                                           (sigmaDi*miuDi[counter])/sqrt(invader_abund))
+        
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
+        }
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
+        }
+        
+        #Calculate invader's growth rate
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
+        
+        counter <- counter + 1
+      }
+      lambda_a[z] <- mean(lambda[,z])
+    }
+    
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_weak[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
+  }
+  print(x/length(env_condition))
+}
+
+#10 species Strong Invader
+#Growth Rate Parameters and Empty Output
+avg_lambda <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+success_lambda_good <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    lambda_a <- rep(NA, runs) 
+    lambda <- matrix(NA, nrow = time-burn_in, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      #Multi-species resident parameters
+      K <- round(runif(species, min=1000, max=1500))
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #2 species resident parameters
+      # K <- c(1000, 1500) 
+      # r <- c(0.5, 0.8)
+      
+      #Strong invader parameters
+      Ki <- 1000
+      ri <- 0.7
+      #Weak invader parameters
+      # Ki <- 900
+      # ri <- 0.4
+      
+      #Set starting resident abundances
+      N <- matrix(nrow = time, ncol = species)
+      colnames(N) <- c(1:species)
+      
+      N[1,] <- 50 
+      
+      #Set invader vector
+      Ni <- rep(NA, (time-burn_in))
+      
+      Ni[1] <- 1 
+      invader_abund <- 1
+      
+      #Create competition coefficients for residents
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5) #Set sd = 0, species to 2
+      beta_vector <- ifelse(beta_vector<0, 0, beta_vector)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      diag(beta_matrix) <- 1
+      
+      #Create competition coefficients for strong invader
+      beta_res_on_invader <- rep(.5, 2)
+      #Create competition coefficients for weak invader
+      # beta_res_on_invader <- rep(.6, 2)
+      
+      #Create environmental effect
+      sigmaE <- -env
+      sigmaEi <- -0.1
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm(species*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species)
+      miuDi <- rnorm((time-burn_in), mean = 0, sd = 1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:species) {
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      counter <- 1
+      
+      #Model effects of good invasion
+      for (t in burn_in:(time-1)) {
+        
+        Ni[counter] <- invader_abund*exp(ri*(1-(invader_abund/Ki) - 
+                                               sum(beta_res_on_invader*N[t,]/K)) + 
+                                           (sigmaEi*miuE[t]) + 
+                                           (sigmaDi*miuDi[counter])/sqrt(invader_abund))
+        # Needed for when N4 is 0 for including demographic stochasticity
+        # as sqrt(0) yields NaN
+        
+        if(is.nan(Ni[counter])) {
+          Ni[counter] <- 0
+        }
+        if(Ni[counter] < 1) {
+          Ni[counter] <- 0
+        }
+        
+        #Calculate invader's growth rate
+        lambda[counter, z] <- log(Ni[counter]/invader_abund)
+        
+        counter <- counter + 1
+      }
+      lambda_a[z] <- mean(lambda[,z])
+    }
+    
+    avg_lambda[x,y] <- mean(lambda_a)
+    success_lambda_good[x,y] <- length(which(lambda>0))/((time-burn_in)*runs)
+  }
+  print(x/length(env_condition))
+}
+
+
+# Create heat maps for 2species communities
+M_10resisstrong <- melt(success_lambda_good) 
+M_10resisweak <- melt(success_lambda_weak)
+
+min_lim <- min(success_lambda_good, success_lambda_weak)
+max_lim <- max(success_lambda_good, success_lambda_weak)
+
+plot10spstrong <- ggplot(M_10resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
+  geom_tile() + 
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 10 Residents", fill="Growth
+Success (%)") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
+
+plot10spweak <- ggplot(M_10resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
+  geom_tile() + 
+  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 10 Residents", fill="Growth
+Success (%)") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=16), #change axis title size
+        axis.text=element_text(size=14), #change axis text size
+        plot.title = element_text(size=18), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=16), #change legend title font size
+        legend.text = element_text(size=14)) #change legend text font size)
 
 ###Add Invader Resilience Code###----
 
