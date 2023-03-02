@@ -13,10 +13,6 @@ library(reshape2)
 library(ggpubr)
 library(tidyverse)
 
-#Number of species in the community
-species <- 2
-a <- species
-
 #Species and Community Parameters
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
@@ -24,7 +20,6 @@ time <- 200
 burn_in <- 100
 runs <- 2000
 
-#r <- c(0.5, 0.8)
 sigmaD <- 1
 
 ###Residents Only Code###----
@@ -395,7 +390,7 @@ ggarrange(plot2sp, plot2num, plot5sp, plot5num, plot10sp, plot10num,
           ncol = 2, nrow = 3)
 
 ###Add Invader Resistance Code###----
-runs <- 200
+runs <- 20
 sigmaD <- 1 #Residents 
 sigmaDi <- 0 #Invaders
 
@@ -662,8 +657,6 @@ Success (%)") +
         legend.title = element_text(size=16), #change legend title font size
         legend.text = element_text(size=14)) #change legend text font size)
 
-ggarrange(plot2spweak, plot2spstrong, labels = c("A", "B"))
-
 #5 species Weak Invader
 species <- 5
 a <- species
@@ -905,7 +898,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=16), #change axis title size
         axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=18), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=16), #change legend title font size
         legend.text = element_text(size=14)) #change legend text font size)
@@ -920,7 +913,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=16), #change axis title size
         axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=18), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=16), #change legend title font size
         legend.text = element_text(size=14)) #change legend text font size)
@@ -1166,7 +1159,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=16), #change axis title size
         axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=18), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=16), #change legend title font size
         legend.text = element_text(size=14)) #change legend text font size)
@@ -1181,10 +1174,14 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=16), #change axis title size
         axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=18), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=16), #change legend title font size
         legend.text = element_text(size=14)) #change legend text font size)
+
+#Create 6-panel figure
+ggarrange(plot2spweak, plot2spstrong, plot5spweak, plot5spstrong, plot10spweak, plot10spstrong,
+          labels = c("A", "B", "C", "D", "E", "F"))
 
 ###Add Invader Resilience Code###----
 
