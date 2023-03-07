@@ -390,7 +390,6 @@ ggarrange(plot2sp, plot2num, plot5sp, plot5num, plot10sp, plot10num,
           ncol = 2, nrow = 3)
 
 ###Add Invader Resistance Code###----
-runs <- 20
 sigmaD <- 1 #Residents 
 sigmaDi <- 0 #Invaders
 
@@ -1181,9 +1180,9 @@ Success (%)") +
 
 #Create 6-panel figure
 ggarrange(plot2spweak, plot2spstrong, plot5spweak, plot5spstrong, plot10spweak, plot10spstrong,
-          labels = c("A", "B", "C", "D", "E", "F"))
+          labels = c("A", "B", "C", "D", "E", "F"), ncol = 2, nrow = 3)
 
-###Add Invader Resilience Code###----
+###Invader Resilience###----
 
 #Number of species in the community
 species <- 10
