@@ -628,33 +628,33 @@ max_lim <- max(success_lambda_good, success_lambda_weak)
 
 plot2spstrong <- ggplot(M_2resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
   y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 2 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 plot2spweak <- ggplot(M_2resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
   y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 2 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 #5 species Weak Invader
 species <- 5
@@ -889,33 +889,33 @@ max_lim <- max(success_lambda_good, success_lambda_weak)
 
 plot5spstrong <- ggplot(M_5resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 5 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 plot5spweak <- ggplot(M_5resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 5 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 #10 species Weak Invader
 species <- 10
@@ -1150,33 +1150,33 @@ max_lim <- max(success_lambda_good, success_lambda_weak)
 
 plot10spstrong <- ggplot(M_10resisstrong, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Strong Invader with 10 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 plot10spweak <- ggplot(M_10resisweak, aes(x=Var1, y=Var2, fill=value*100)) + 
   geom_tile() + 
-  scale_fill_distiller(palette = "RdBu", limits = c(min_lim*100, max_lim*100)) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 100)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), title = "Growth Rates of Weak Invader with 10 Residents", fill="Growth
 Success (%)") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=16), #change axis title size
-        axis.text=element_text(size=14), #change axis text size
-        plot.title = element_text(size=14), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=16), #change legend title font size
-        legend.text = element_text(size=14)) #change legend text font size)
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
 
 #Create 6-panel figure
 ggarrange(plot2spweak, plot2spstrong, plot5spweak, plot5spstrong, plot10spweak, plot10spstrong,
