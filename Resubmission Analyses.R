@@ -389,7 +389,7 @@ ggarrange(plot2sp, plot2num, plot5sp, plot5num, plot10sp, plot10num,
           labels = c("A", "B", "C", "D", "E", "F"),
           ncol = 2, nrow = 3)
 
-###Add Invader Resistance Code###----
+###Invader Resistance Code###----
 sigmaD <- 1 #Residents 
 sigmaDi <- 0 #Invaders
 
@@ -636,7 +636,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -651,7 +651,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -897,7 +897,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -912,7 +912,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1158,7 +1158,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1173,7 +1173,7 @@ Success (%)") +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1182,25 +1182,29 @@ Success (%)") +
 ggarrange(plot2spweak, plot2spstrong, plot5spweak, plot5spstrong, plot10spweak, plot10spstrong,
           labels = c("A", "B", "C", "D", "E", "F"), ncol = 2, nrow = 3)
 
-###Invader Resilience###----
+###Invader Resilience Code###----
 
-#Number of species in the community
-species <- 10
-a <- species
+#Only calculate VR if growth persists after 10 timesteps past invasion
+invasion_success <- burn_in + 10
 
 #Species and Community Parameters
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
 time <- 200 
 burn_in <- 100
-runs <- 200
+runs <- 2000
 
 sigmaD <- 1
+
+#Number of species in the community
+species <- 2
+a <- species
 
 #Invader Growth Rate Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
+#2 Species Strong
 for (x in 1:length(env_condition)) {
   for (y in 1:length(beta_range)) {
     
@@ -1213,11 +1217,11 @@ for (x in 1:length(env_condition)) {
     for (z in 1:runs) {
       
       K <- round(runif(species, min=1000, max=1500))
-      #Add invader K
-      K <- append(K, 1000)
+        #Add strong invader K
+        K <- append(K, 1000)
       r <- round(runif(species, min=0.1, max=0.9), 1)
-      #Add invader R
-      r <- append(r, 0.7)
+        #Add invader R
+       r <- append(r, 0.7)
       
       #Set starting abundances
       N <- matrix(nrow = time, ncol = species+1)
@@ -1227,11 +1231,11 @@ for (x in 1:length(env_condition)) {
       N[1, species+1] <- 0
       
       #Create competition coefficients
-      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0)
       beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
-      #Add invader competition coefficients
+      #Add strong invader competition coefficients
       beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
       beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
@@ -1278,7 +1282,246 @@ for (x in 1:length(env_condition)) {
         gather(key = "species", value = "abundance") %>%
         mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
       
-      if ((species+1)-number_extinct > 1){
+      if ((species+1)-number_extinct > 1 && N$`3`[invasion_success] > 1){
+        VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
+                                  abundance.var = "abundance", bootnumber = 1)
+        total_species[z] <- (species+1)-number_extinct
+        VR_current[z] <- VR_temp$VR } else {
+          VR_current[z] <- NA
+          total_species[z] <- NA
+        }
+      
+    }
+    
+    VR[x,y] <- mean(VR_current, na.rm = TRUE)
+    number_species[x,y] <- mean(total_species, na.rm = TRUE)
+  }
+  print(x/length(env_condition))
+}
+
+# Create heat map
+M2resilstrong <- melt(VR) 
+
+#Invader Growth Rate Empty Output
+
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#2 Species Weak
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
+    
+    for (z in 1:runs) {
+      
+      K <- round(runif(species, min=1000, max=1500))
+      #Add weak invader K
+      K <- append(K, 900)
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Add invader R
+      r <- append(r, 0.4)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add weak invader competition coefficients
+      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      #        set_colnames(c(1:(species + 1))) 
+      #        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- -env
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      extinct <- which(N[time,]==0) # determine which species go extinct
+      number_extinct <- length(extinct)
+      
+      N <- as.data.frame(N)
+      N.clean <- N %>%
+        slice(-(1:burn_in)) %>%
+        select(-c(extinct)) %>%
+        gather(key = "species", value = "abundance") %>%
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
+      
+      if ((species+1)-number_extinct > 1 && N$`3`[invasion_success] > 1){
+        VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
+                                  abundance.var = "abundance", bootnumber = 1)
+        total_species[z] <- (species+1)-number_extinct
+        VR_current[z] <- VR_temp$VR } else {
+          VR_current[z] <- NA
+          total_species[z] <- NA
+        }
+    }
+    
+    VR[x,y] <- mean(VR_current, na.rm = TRUE)
+    number_species[x,y] <- mean(total_species, na.rm = TRUE)
+  }
+  print(x/length(env_condition))
+}
+
+# Create heat map
+M2resilweak <- melt(VR)
+
+#2 species graphs
+plot2resilstrong <- ggplot(M2resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Post Weak Invasion of 2 Species Communities' VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+plot2resilweak <- ggplot(M2resilweak, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Post Weak Invasion of 2 Species Communities' VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+#Number of species in the community
+species <- 5
+a <- species
+
+#Invader VR output
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#5 Species Strong
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
+    
+    for (z in 1:runs) {
+      
+      K <- round(runif(species, min=1000, max=1500))
+      #Add strong invader K
+      K <- append(K, 1000)
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Add invader R
+      r <- append(r, 0.7)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add strong invader competition coefficients
+      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      #        set_colnames(c(1:(species + 1))) 
+      #        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- -env
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      extinct <- which(N[time,]==0) # determine which species go extinct
+      number_extinct <- length(extinct)
+      
+      N <- as.data.frame(N)
+      N.clean <- N %>%
+        slice(-(1:burn_in)) %>%
+        select(-c(extinct)) %>%
+        gather(key = "species", value = "abundance") %>%
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
+      
+      if ((species+1)-number_extinct > 1 && N$`6`[invasion_success] > 1){
         VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
                                   abundance.var = "abundance", bootnumber = 1)
         total_species[z] <- (species+1)-number_extinct
@@ -1297,19 +1540,382 @@ for (x in 1:length(env_condition)) {
 
 
 # Create heat map
-M1 <- melt(VR) 
+M5resilstrong <- melt(VR) 
 
-ggplot(M1, aes(x=Var1, y=Var2, fill=value)) + 
+#Invader Growth Rate Empty Output
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#5 Species Weak
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
+    
+    for (z in 1:runs) {
+      
+      K <- round(runif(species, min=1000, max=1500))
+      #Add weak invader K
+      K <- append(K, 900)
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Add invader R
+      r <- append(r, 0.4)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add weak invader competition coefficients
+      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      #        set_colnames(c(1:(species + 1))) 
+      #        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- -env
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      extinct <- which(N[time,]==0) # determine which species go extinct
+      number_extinct <- length(extinct)
+      
+      N <- as.data.frame(N)
+      N.clean <- N %>%
+        slice(-(1:burn_in)) %>%
+        select(-c(extinct)) %>%
+        gather(key = "species", value = "abundance") %>%
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
+      
+      if ((species+1)-number_extinct > 1 && N$`6`[invasion_success] > 1){
+        VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
+                                  abundance.var = "abundance", bootnumber = 1)
+        total_species[z] <- (species+1)-number_extinct
+        VR_current[z] <- VR_temp$VR } else {
+          VR_current[z] <- NA
+          total_species[z] <- NA
+        }
+      
+    }
+    
+    VR[x,y] <- mean(VR_current, na.rm = TRUE)
+    number_species[x,y] <- mean(total_species, na.rm = TRUE)
+  }
+  print(x/length(env_condition))
+}
+
+# Create heat map
+M5resilweak <- melt(VR)
+
+#2 species graphs
+plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Resident Communities' Variance Ratios", fill="VR") +
+       title = "Post Weak Invasion of 5 Species Communities' VRs", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=14), #change axis title size
-        axis.text=element_text(size=12), #change axis text size
-        plot.title = element_text(size=18), #change plot title size
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=12), #change legend title font size
+        legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
+
+plot5resilweak <- ggplot(M5resilweak, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Post Weak Invasion of 5 Species Communities' VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+#Number of species in the community
+species <- 10
+a <- species
+
+#Invader Growth Rate Empty Output
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#10 Species Strong
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
+    
+    for (z in 1:runs) {
+      
+      K <- round(runif(species, min=1000, max=1500))
+      #Add strong invader K
+      K <- append(K, 1000)
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Add invader R
+      r <- append(r, 0.7)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add strong invader competition coefficients
+      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      #        set_colnames(c(1:(species + 1))) 
+      #        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- -env
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      extinct <- which(N[time,]==0) # determine which species go extinct
+      number_extinct <- length(extinct)
+      
+      N <- as.data.frame(N)
+      N.clean <- N %>%
+        slice(-(1:burn_in)) %>%
+        select(-c(extinct)) %>%
+        gather(key = "species", value = "abundance") %>%
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
+      
+      if ((species+1)-number_extinct > 1 && N$`11`[invasion_success] > 1){
+        VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
+                                  abundance.var = "abundance", bootnumber = 1)
+        total_species[z] <- (species+1)-number_extinct
+        VR_current[z] <- VR_temp$VR } else {
+          VR_current[z] <- NA
+          total_species[z] <- NA
+        }
+      
+    }
+    
+    VR[x,y] <- mean(VR_current, na.rm = TRUE)
+    number_species[x,y] <- mean(total_species, na.rm = TRUE)
+  }
+  print(x/length(env_condition))
+}
+
+
+# Create heat map
+M10resilstrong <- melt(VR) 
+
+#Invader Growth Rate Empty Output
+VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#10 Species Weak
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    VR_current <- rep(NA, runs)
+    total_species <- rep(NA, runs)
+    
+    for (z in 1:runs) {
+      
+      K <- round(runif(species, min=1000, max=1500))
+      #Add weak invader K
+      K <- append(K, 900)
+      r <- round(runif(species, min=0.1, max=0.9), 1)
+      #Add invader R
+      r <- append(r, 0.4)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0.5)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add weak invader competition coefficients
+      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
+      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      #        set_colnames(c(1:(species + 1))) 
+      #        set_rownames(c(1:(species + 1))) maybe unnecessary
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- -env
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      extinct <- which(N[time,]==0) # determine which species go extinct
+      number_extinct <- length(extinct)
+      
+      N <- as.data.frame(N)
+      N.clean <- N %>%
+        slice(-(1:burn_in)) %>%
+        select(-c(extinct)) %>%
+        gather(key = "species", value = "abundance") %>%
+        mutate(time = rep(c(1:(time-burn_in)), times = ((a+1)-number_extinct)))
+      
+      if ((species+1)-number_extinct > 1 && N$`11`[invasion_success] > 1){
+        VR_temp <- variance_ratio(N.clean, time.var = "time", species.var = "species",
+                                  abundance.var = "abundance", bootnumber = 1)
+        total_species[z] <- (species+1)-number_extinct
+        VR_current[z] <- VR_temp$VR } else {
+          VR_current[z] <- NA
+          total_species[z] <- NA
+        }
+      
+    }
+    
+    VR[x,y] <- mean(VR_current, na.rm = TRUE)
+    number_species[x,y] <- mean(total_species, na.rm = TRUE)
+  }
+  print(x/length(env_condition))
+}
+
+# Create heat map
+M10resilweak <- melt(VR)
+
+#2 species graphs
+plot10resilstrong <- ggplot(M10resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Post Strong Invasion of 10 Species Communities' VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+plot10resilweak <- ggplot(M10resilweak, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Post Weak Invasion of 10 Species Communities' VRs", fill="VR") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+#Create 6-panel figure
+ggarrange(plot2resilweak, plot2resilstrong, plot5resilweak, plot5resilstrong, plot10resilweak, 
+          plot10resilstrong,
+          labels = c("A", "B", "C", "D", "E", "F"), ncol = 2, nrow = 3)
