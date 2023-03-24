@@ -1200,7 +1200,7 @@ sigmaD <- 1
 species <- 2
 a <- species
 
-#Invader Growth Rate Empty Output
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1302,8 +1302,7 @@ for (x in 1:length(env_condition)) {
 # Create heat map
 M2resilstrong <- melt(VR) 
 
-#Invader Growth Rate Empty Output
-
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1439,7 +1438,7 @@ plot2resilweak <- ggplot(M2resilweak, aes(x=Var1, y=Var2, fill=value)) +
 species <- 5
 a <- species
 
-#Invader VR output
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1542,7 +1541,7 @@ for (x in 1:length(env_condition)) {
 # Create heat map
 M5resilstrong <- melt(VR) 
 
-#Invader Growth Rate Empty Output
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1644,7 +1643,7 @@ for (x in 1:length(env_condition)) {
 # Create heat map
 M5resilweak <- melt(VR)
 
-#2 species graphs
+#5 species graphs
 plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
@@ -1679,7 +1678,7 @@ plot5resilweak <- ggplot(M5resilweak, aes(x=Var1, y=Var2, fill=value)) +
 species <- 10
 a <- species
 
-#Invader Growth Rate Empty Output
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1782,7 +1781,7 @@ for (x in 1:length(env_condition)) {
 # Create heat map
 M10resilstrong <- melt(VR) 
 
-#Invader Growth Rate Empty Output
+#Variance Ratio Empty Output
 VR <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 number_species <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
 
@@ -1884,7 +1883,7 @@ for (x in 1:length(env_condition)) {
 # Create heat map
 M10resilweak <- melt(VR)
 
-#2 species graphs
+#10 species graphs
 plot10resilstrong <- ggplot(M10resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
