@@ -1216,10 +1216,10 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      K <- round(runif(species, min=1000, max=1500))
+      K <- c(1000, 1500) #Set to specific values to match the original values used
         #Add strong invader K
         K <- append(K, 1000)
-      r <- round(runif(species, min=0.1, max=0.9), 1)
+      r <- c(0.5, 0.8)
         #Add invader R
        r <- append(r, 0.7)
       
@@ -1318,10 +1318,10 @@ for (x in 1:length(env_condition)) {
     
     for (z in 1:runs) {
       
-      K <- round(runif(species, min=1000, max=1500))
-      #Add weak invader K
+      K <- c(1000, 1500) #Set to specific values to match the original values used
+      #Add strong invader K
       K <- append(K, 900)
-      r <- round(runif(species, min=0.1, max=0.9), 1)
+      r <- c(0.5, 0.8)
       #Add invader R
       r <- append(r, 0.4)
       
@@ -1406,7 +1406,7 @@ M2resilweak <- melt(VR)
 #2 species graphs
 plot2resilstrong <- ggplot(M2resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
        title = "Post Weak Invasion of 2 Species Communities' VRs", fill="VR") +
@@ -1421,7 +1421,7 @@ plot2resilstrong <- ggplot(M2resilstrong, aes(x=Var1, y=Var2, fill=value)) +
 
 plot2resilweak <- ggplot(M2resilweak, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
        title = "Post Weak Invasion of 2 Species Communities' VRs", fill="VR") +
@@ -1646,7 +1646,7 @@ M5resilweak <- melt(VR)
 #5 species graphs
 plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,3)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
        title = "Post Weak Invasion of 5 Species Communities' VRs", fill="VR") +
@@ -1661,7 +1661,7 @@ plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) +
 
 plot5resilweak <- ggplot(M5resilweak, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,5)) +
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,3)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
        title = "Post Weak Invasion of 5 Species Communities' VRs", fill="VR") +
