@@ -1914,6 +1914,24 @@ plot10resilweak <- ggplot(M10resilweak, aes(x=Var1, y=Var2, fill=value)) +
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
 
+M_2numberspecies <- melt(number_species) 
+
+ggplot(M_2numberspecies, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 10/2, limit = c(0,10)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Number of Species Remaining", fill="Species") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=16), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+
 #Create 6-panel figure
 ggarrange(plot2resilweak, plot2resilstrong, plot5resilweak, plot5resilstrong, plot10resilweak, 
           plot10resilstrong,

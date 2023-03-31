@@ -25,8 +25,8 @@ source(here("Species_Parameters_Source_Fig134.R"))
 
 #Figure 3.a and c: Weak Invader in 2 and 3 Species Community----
 
-time <- 300 
-burn_in <- 200
+time <- 200 
+burn_in <- 100
 timeseries <- 100 # length of timeseries to use for VR calculations
 invasion_success <- burn_in + 10
 
