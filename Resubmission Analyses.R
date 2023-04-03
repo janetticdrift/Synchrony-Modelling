@@ -1244,7 +1244,8 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.1)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1344,7 +1345,8 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.06)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1478,7 +1480,8 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.1)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1576,12 +1579,11 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-      #        set_colnames(c(1:(species + 1))) 
-      #        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.06)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1716,7 +1718,8 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.1)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1817,7 +1820,8 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- c(-env, -env, -0.06)
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
