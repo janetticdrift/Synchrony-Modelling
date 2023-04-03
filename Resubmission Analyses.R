@@ -1241,8 +1241,6 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-#        set_colnames(c(1:(species + 1))) 
-#        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
@@ -1319,7 +1317,7 @@ for (x in 1:length(env_condition)) {
     for (z in 1:runs) {
       
       K <- c(1000, 1500) #Set to specific values to match the original values used
-      #Add strong invader K
+      #Add weak invader K
       K <- append(K, 900)
       r <- c(0.5, 0.8)
       #Add invader R
@@ -1343,8 +1341,6 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-      #        set_colnames(c(1:(species + 1))) 
-      #        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
