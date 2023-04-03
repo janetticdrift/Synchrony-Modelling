@@ -1192,7 +1192,7 @@ env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
 time <- 200 
 burn_in <- 100
-runs <- 2000
+runs <- 20
 
 sigmaD <- 1
 
@@ -1236,15 +1236,15 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add strong invader competition coefficients
-      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.5, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.5, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1253,13 +1253,13 @@ for (x in 1:length(env_condition)) {
       miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
       miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
       
-      for (t in 1:(time-1)) { # for each species being the focal species
+      for (t in 1:(time-1)) { #for each species being the focal species
         for (s in 1:(species+1)) {
           if(t == burn_in) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
@@ -1336,15 +1336,15 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add weak invader competition coefficients
-      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.4, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.6, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1359,7 +1359,7 @@ for (x in 1:length(env_condition)) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
@@ -1470,17 +1470,15 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add strong invader competition coefficients
-      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.5, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.5, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-      #        set_colnames(c(1:(species + 1))) 
-      #        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1495,7 +1493,7 @@ for (x in 1:length(env_condition)) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
@@ -1573,8 +1571,8 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add weak invader competition coefficients
-      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.4, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.6, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
@@ -1583,7 +1581,7 @@ for (x in 1:length(env_condition)) {
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1598,7 +1596,7 @@ for (x in 1:length(env_condition)) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
@@ -1710,17 +1708,15 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add strong invader competition coefficients
-      beta_ri <- sample(seq(from=0.5, to=.95, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0, to=.5, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.5, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.5, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-      #        set_colnames(c(1:(species + 1))) 
-      #        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.1)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1735,7 +1731,7 @@ for (x in 1:length(env_condition)) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
@@ -1813,17 +1809,15 @@ for (x in 1:length(env_condition)) {
       beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
       
       #Add weak invader competition coefficients
-      beta_ri <- sample(seq(from=0, to=.5, by=.05), species+1, replace = TRUE) #Effect of invader on residents
-      beta_ir <- sample(seq(from=0.5, to=.95, by=.05), species, replace = TRUE) #Effect of residents on invader
+      beta_ri <- rep(0.4, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.6, species) #Effect of residents on invader
       beta_matrix <- beta_matrix %>%
         rbind(beta_ir) %>%
         cbind(beta_ri)
-      #        set_colnames(c(1:(species + 1))) 
-      #        set_rownames(c(1:(species + 1))) maybe unnecessary
       diag(beta_matrix) <- 1
       
       #Create environmental effect
-      sigmaE <- -env
+      sigmaE <- c(-env, -env, -0.06)
       
       #Create environmental variation
       miuE <- rnorm(time, mean = 0, sd = 1)
@@ -1838,7 +1832,7 @@ for (x in 1:length(env_condition)) {
             N[t,species+1] <- 1
           }
           N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
-                                   (sigmaE*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
+                                   (sigmaE[s]*miuE[t]) + (sigmaD*miuD[t,s])/sqrt(N[t,s]))
           
           if(is.nan(N[t+1,s])) {
             N[t+1,s] <- 0
