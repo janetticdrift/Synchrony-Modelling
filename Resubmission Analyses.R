@@ -1930,3 +1930,213 @@ ggplot(M_2numberspecies, aes(x=Var1, y=Var2, fill=value)) +
 ggarrange(plot2resilweak, plot2resilstrong, plot5resilweak, plot5resilstrong, plot10resilweak, 
           plot10resilstrong,
           labels = c("A", "B", "C", "D", "E", "F"), ncol = 2, nrow = 3)
+
+#Question 7: Geometric Mean
+
+env_condition <- seq(from=0, to=.25, by=.01)
+beta_range <- seq(from=0, to=.95, by=.05)
+time <- 110 
+burn_in <- 100
+runs <- 2000
+
+#Number of species in the community
+species <- 2
+a <- species
+
+#Geometric mean Empty Output
+avg_geom <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#2 Species Strong
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    geom <- matrix(NA, nrow = 1, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      K <- c(1000, 1500) #Set to specific values to match the original values used
+      #Add strong invader K
+      K <- append(K, 1000)
+      r <- c(0.5, 0.8)
+      #Add invader R
+      r <- append(r, 0.7)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add strong invader competition coefficients
+      beta_ri <- rep(0.5, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.5, species) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.1)
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      sigmaD <- c(1, 1, 0)
+      
+      for (t in 1:(time-1)) { #for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE[s]*miuE[t]) + (sigmaD[s]*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      geom[,z] <- exp(mean(log(N[burn_in:(time-1),3])))
+    }
+    avg_geom[x,y] <- mean(geom)
+  }
+  print(x/length(env_condition))
+}
+
+#Melt together data
+geom2strong <- melt(avg_geom) 
+
+#Variance Ratio Empty Output
+avg_geom <- matrix(NA,nrow=length(env_condition), ncol=length(beta_range))
+
+#2 Species Weak
+for (x in 1:length(env_condition)) {
+  for (y in 1:length(beta_range)) {
+    
+    env <- env_condition[x]
+    beta <- beta_range[y]
+    
+    geom <- matrix(NA, nrow = 1, ncol = runs)
+    
+    for (z in 1:runs) {
+      
+      K <- c(1000, 1500) #Set to specific values to match the original values used
+      #Add weak invader K
+      K <- append(K, 900)
+      r <- c(0.5, 0.8)
+      #Add invader R
+      r <- append(r, 0.4)
+      
+      #Set starting abundances
+      N <- matrix(nrow = time, ncol = species+1)
+      colnames(N) <- c(1:(species + 1))
+      
+      N[1,1:species] <- 50 
+      N[1, species+1] <- 0
+      
+      #Create competition coefficients
+      beta_vector <- rnorm(species*species, mean=beta_range[y], sd=0)
+      beta_matrix <- matrix(data=beta_vector, nrow = species, ncol = species)
+      beta_matrix <- ifelse(beta_matrix<0, 0, beta_matrix)
+      
+      #Add weak invader competition coefficients
+      beta_ri <- rep(0.4, species + 1) #Effect of invader on residents
+      beta_ir <- rep(0.6, species) #Effect of residents on invader
+      beta_matrix <- beta_matrix %>%
+        rbind(beta_ir) %>%
+        cbind(beta_ri)
+      diag(beta_matrix) <- 1
+      
+      #Create environmental effect
+      sigmaE <- rep(-env, species)
+      sigmaE <- append(sigmaE, -0.06)
+      
+      #Create environmental variation
+      miuE <- rnorm(time, mean = 0, sd = 1)
+      
+      #Create demographic variation
+      miuD <- rnorm((species+1)*time, mean = 0, sd = 1)
+      miuD <- matrix(data=miuD, nrow = time, ncol = species+1)
+      sigmaD <- c(1, 1, 0)
+      
+      for (t in 1:(time-1)) { # for each species being the focal species
+        for (s in 1:(species+1)) {
+          if(t == burn_in) {
+            N[t,species+1] <- 1
+          }
+          N[t+1,s] <- N[t,s]*exp(r[s]*(1-sum(beta_matrix[s,]*N[t,]/K)) +
+                                   (sigmaE[s]*miuE[t]) + (sigmaD[s]*miuD[t,s])/sqrt(N[t,s]))
+          
+          if(is.nan(N[t+1,s])) {
+            N[t+1,s] <- 0
+          }
+          if(N[t+1,s] < 1) {
+            N[t+1,s] <- 0
+          }
+        }
+      }
+      
+      geom[,z] <- exp(mean(log(N[burn_in:(time-1),3])))
+    }
+    avg_geom[x,y] <- mean(geom)
+  }
+  print(x/length(env_condition))
+}
+
+# Create heat map
+geom2weak <- melt(avg_geom) 
+
+max_lim <- max(geom2strong$value, geom2weak$value)
+
+plotgeomweak <- ggplot(geom2weak, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_contour(aes(z=value), stat="contour") +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Abundance of Weak Invader with 2 Residents", fill="Number of 
+Invaders") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+plotgeomstrong <- ggplot(geom2strong, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_contour(aes(z=value), stat="contour", bins = 3) +
+  scale_fill_distiller(palette = "RdBu", limits = c(0, 5)) +
+  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
+       y= expression(paste("Strength of Competititon (", beta, ")")), 
+       title = "Abundance of Strong Invader with 2 Residents", fill="Number of 
+Invaders") +
+  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
+  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
+  theme(axis.title=element_text(size=10), #change axis title size
+        axis.text=element_text(size=12), #change axis tick size
+        plot.title = element_text(size=14), #change plot title size
+        legend.key.size = unit(1, 'cm'), #change legend key size
+        legend.title = element_text(size=10), #change legend title font size
+        legend.text = element_text(size=10)) #change legend text font size)
+
+ggarrange(plotgeomweak, plotgeomstrong,
+          common.legend = TRUE, legend = "right", labels = c("A", "B"), ncol = 2, nrow = 1)
