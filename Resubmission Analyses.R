@@ -1184,17 +1184,16 @@ ggarrange(plot2spweak, plot2spstrong, plot5spweak, plot5spstrong, plot10spweak, 
 
 ###Invader Resilience Code###----
 
-#Only calculate VR if growth persists after 10 timesteps past invasion
-invasion_success <- burn_in + 10
-
 #Species and Community Parameters
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
 time <- 200 
 burn_in <- 100
-runs <- 20
-
+runs <- 2000
 sigmaD <- 1
+
+#Only calculate VR if growth persists after 10 timesteps past invasion
+invasion_success <- burn_in + 10
 
 #Number of species in the community
 species <- 2
