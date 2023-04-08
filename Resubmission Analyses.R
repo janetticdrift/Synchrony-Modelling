@@ -1407,7 +1407,7 @@ plot2resilstrong <- ggplot(M2resilstrong, aes(x=Var1, y=Var2, fill=value)) +
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,2)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Post Weak Invasion of 2 Species Communities' VRs", fill="VR") +
+       title = "Post Strong Invasion of 2 Species Communities' VRs", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
@@ -1645,7 +1645,7 @@ plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) +
   scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 1, limit = c(0,3)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Post Weak Invasion of 5 Species Communities' VRs", fill="VR") +
+       title = "Post Strong Invasion of 5 Species Communities' VRs", fill="VR") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
@@ -1888,7 +1888,7 @@ plot10resilstrong <- ggplot(M10resilstrong, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1903,24 +1903,7 @@ plot10resilweak <- ggplot(M10resilweak, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
-        legend.key.size = unit(1, 'cm'), #change legend key size
-        legend.title = element_text(size=10), #change legend title font size
-        legend.text = element_text(size=10)) #change legend text font size)
-
-M_2numberspecies <- melt(number_species) 
-
-ggplot(M_2numberspecies, aes(x=Var1, y=Var2, fill=value)) + 
-  geom_tile() + 
-  scale_fill_gradient2(low="#008080", high ="#ca562c", mid = "#f6edbd", midpoint = 10/2, limit = c(0,10)) +
-  labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
-       y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Number of Species Remaining", fill="Species") +
-  scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
-  scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
-  theme(axis.title=element_text(size=10), #change axis title size
-        axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=16), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1931,7 +1914,7 @@ ggarrange(plot2resilweak, plot2resilstrong, plot5resilweak, plot5resilstrong, pl
           plot10resilstrong,
           labels = c("A", "B", "C", "D", "E", "F"), ncol = 2, nrow = 3)
 
-#Question 7: Geometric Mean
+#Question 7: Geometric Mean----
 
 env_condition <- seq(from=0, to=.25, by=.01)
 beta_range <- seq(from=0, to=.95, by=.05)
@@ -2106,12 +2089,10 @@ max_lim <- max(geom2strong$value, geom2weak$value)
 
 plotgeomweak <- ggplot(geom2weak, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  geom_contour(aes(z=value), stat="contour") +
   scale_fill_distiller(palette = "RdBu", limits = c(0, 5)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Abundance of Weak Invader with 2 Residents", fill="Number of 
-Invaders") +
+       title = "Growth Rate of Weak Invader with 2 Residents", fill="Geometric Mean") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
@@ -2123,12 +2104,10 @@ Invaders") +
 
 plotgeomstrong <- ggplot(geom2strong, aes(x=Var1, y=Var2, fill=value)) + 
   geom_tile() + 
-  geom_contour(aes(z=value), stat="contour", bins = 3) +
   scale_fill_distiller(palette = "RdBu", limits = c(0, 5)) +
   labs(x= expression(paste("Effect of Environmental Variability (", sigma[E],")")), 
        y= expression(paste("Strength of Competititon (", beta, ")")), 
-       title = "Abundance of Strong Invader with 2 Residents", fill="Number of 
-Invaders") +
+       title = "Growth Rate of Strong Invader with 2 Residents", fill="Geometric Mean") +
   scale_x_continuous(breaks = seq(1, 26, 5), labels = c("0", "0.05", "0.1", "0.15", "0.2", "0.25")) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
