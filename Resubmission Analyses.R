@@ -1411,7 +1411,7 @@ plot2resilstrong <- ggplot(M2resilstrong, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1426,7 +1426,7 @@ plot2resilweak <- ggplot(M2resilweak, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1649,7 +1649,7 @@ plot5resilstrong <- ggplot(M5resilstrong, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
@@ -1664,7 +1664,7 @@ plot5resilweak <- ggplot(M5resilweak, aes(x=Var1, y=Var2, fill=value)) +
   scale_y_continuous(breaks = seq(0, 20, 5), labels = c("0", "0.2", "0.45", "0.7", "0.95")) +
   theme(axis.title=element_text(size=10), #change axis title size
         axis.text=element_text(size=12), #change axis tick size
-        plot.title = element_text(size=14), #change plot title size
+        plot.title = element_text(size=13.5), #change plot title size
         legend.key.size = unit(1, 'cm'), #change legend key size
         legend.title = element_text(size=10), #change legend title font size
         legend.text = element_text(size=10)) #change legend text font size)
