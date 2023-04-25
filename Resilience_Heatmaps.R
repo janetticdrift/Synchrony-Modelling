@@ -16,7 +16,7 @@ library(ggpubr)
 # Package for setting paths
 library(here)
 
-runs <- 20 # number of runs
+runs <- 2000 # number of runs
 
 #load species parameters
 source(here("Species_Parameters_Source_Fig134.R"))
